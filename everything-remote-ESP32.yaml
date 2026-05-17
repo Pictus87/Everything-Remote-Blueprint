@@ -1,0 +1,1293 @@
+esphome:
+  name: everything-remote
+  friendly_name: Everything Remote
+  on_boot:
+    - priority: 250
+      then:
+        - lambda: |-
+            id(last_active) = millis() / 1000;
+            id(wake_button_processed) = false;
+
+            auto cause = esp_sleep_get_wakeup_cause();
+            if (cause == ESP_SLEEP_WAKEUP_EXT0) {
+              ESP_LOGI("main", "Device woke up by EXT0");
+            } else if (cause == ESP_SLEEP_WAKEUP_TIMER) {
+              ESP_LOGD("main", "Device woke up by timer.");
+            } else {
+              ESP_LOGD("main", "Device woke up by other cause: %d", cause);
+            }
+
+esp32:
+  board: esp32dev
+  framework:
+    type: arduino
+
+logger:
+
+api:
+
+ota:
+  platform: esphome
+
+wifi:
+  ssid: "Wifi SSID"
+  password: "Wifi PW"
+  fast_connect: true
+  power_save_mode: LIGHT
+
+globals:
+  - id: last_active
+    type: int
+    restore_value: no
+    initial_value: '0'
+  - id: wake_button_processed
+    type: bool
+    restore_value: no
+    initial_value: 'false'
+
+script:
+  - id: reset_idle_timer
+    then:
+      - lambda: |-
+          id(last_active) = millis() / 1000;
+
+deep_sleep:
+  id: deep_sleep_ctrl
+  sleep_duration: 2800 min
+  wakeup_pin:
+    number: GPIO0
+    inverted: true
+    allow_other_uses: true
+
+interval:
+  - interval: 60s
+    then:
+      - if:
+          condition:
+            lambda: return (millis() / 1000) - id(last_active) >= 1200;
+          then:
+            - deep_sleep.enter: deep_sleep_ctrl
+
+# ==============================================================
+# MAKRO: Jeder physische Button löst 3 Template-Sensoren aus:
+#   <id>_single, <id>_double, <id>_long
+# ==============================================================
+
+binary_sensor:
+
+  # ── POWER (GPIO0 – kein double click wegen wake-up) ────────
+  - platform: gpio
+    pin:
+      number: GPIO0
+      mode: { input: true, pullup: true }
+      inverted: true
+      allow_other_uses: true
+    name: "Power"
+    id: power
+    internal: true
+    on_press:
+      then:
+        - script.execute: reset_idle_timer
+        - binary_sensor.template.publish:
+            id: power_single
+            state: ON
+        - delay: 200ms
+        - binary_sensor.template.publish:
+            id: power_single
+            state: OFF
+
+  - platform: template
+    name: "Power Single"
+    id: power_single
+
+  # ── BACK (GPIO2) ───────────────────────────────────────────
+  - platform: gpio
+    pin:
+      number: GPIO2
+      mode: { input: true, pullup: true }
+      inverted: true
+    name: "Back"
+    id: back
+    internal: true
+    on_multi_click:
+      - timing:
+          - ON for 50ms to 350ms
+          - OFF for at least 350ms
+        then:
+          - script.execute: reset_idle_timer
+          - binary_sensor.template.publish:
+              id: back_single
+              state: ON
+          - delay: 200ms
+          - binary_sensor.template.publish:
+              id: back_single
+              state: OFF
+      - timing:
+          - ON for 50ms to 350ms
+          - OFF for 50ms to 350ms
+          - ON for 50ms to 350ms
+          - OFF for at least 200ms
+        then:
+          - script.execute: reset_idle_timer
+          - binary_sensor.template.publish:
+              id: back_double
+              state: ON
+          - delay: 200ms
+          - binary_sensor.template.publish:
+              id: back_double
+              state: OFF
+      - timing:
+          - ON for at least 500ms
+        then:
+          - script.execute: reset_idle_timer
+          - binary_sensor.template.publish:
+              id: back_long
+              state: ON
+          - delay: 200ms
+          - binary_sensor.template.publish:
+              id: back_long
+              state: OFF
+
+  - platform: template
+    name: "Back Single"
+    id: back_single
+  - platform: template
+    name: "Back Double"
+    id: back_double
+  - platform: template
+    name: "Back Long"
+    id: back_long
+
+  # ── HOME (GPIO4) ───────────────────────────────────────────
+  - platform: gpio
+    pin:
+      number: GPIO4
+      mode: { input: true, pullup: true }
+      inverted: true
+    name: "Home"
+    id: home
+    internal: true
+    on_multi_click:
+      - timing:
+          - ON for 50ms to 350ms
+          - OFF for at least 350ms
+        then:
+          - script.execute: reset_idle_timer
+          - binary_sensor.template.publish:
+              id: home_single
+              state: ON
+          - delay: 200ms
+          - binary_sensor.template.publish:
+              id: home_single
+              state: OFF
+      - timing:
+          - ON for 50ms to 350ms
+          - OFF for 50ms to 350ms
+          - ON for 50ms to 350ms
+          - OFF for at least 200ms
+        then:
+          - script.execute: reset_idle_timer
+          - binary_sensor.template.publish:
+              id: home_double
+              state: ON
+          - delay: 200ms
+          - binary_sensor.template.publish:
+              id: home_double
+              state: OFF
+      - timing:
+          - ON for at least 500ms
+        then:
+          - script.execute: reset_idle_timer
+          - binary_sensor.template.publish:
+              id: home_long
+              state: ON
+          - delay: 200ms
+          - binary_sensor.template.publish:
+              id: home_long
+              state: OFF
+
+  - platform: template
+    name: "Home Single"
+    id: home_single
+  - platform: template
+    name: "Home Double"
+    id: home_double
+  - platform: template
+    name: "Home Long"
+    id: home_long
+
+  # ── PLAY PAUSE (GPIO5) ─────────────────────────────────────
+  - platform: gpio
+    pin:
+      number: GPIO5
+      mode: { input: true, pullup: true }
+      inverted: true
+    name: "Play Pause"
+    id: play_pause
+    internal: true
+    on_multi_click:
+      - timing:
+          - ON for 50ms to 350ms
+          - OFF for at least 350ms
+        then:
+          - script.execute: reset_idle_timer
+          - binary_sensor.template.publish:
+              id: play_pause_single
+              state: ON
+          - delay: 200ms
+          - binary_sensor.template.publish:
+              id: play_pause_single
+              state: OFF
+      - timing:
+          - ON for 50ms to 350ms
+          - OFF for 50ms to 350ms
+          - ON for 50ms to 350ms
+          - OFF for at least 200ms
+        then:
+          - script.execute: reset_idle_timer
+          - binary_sensor.template.publish:
+              id: play_pause_double
+              state: ON
+          - delay: 200ms
+          - binary_sensor.template.publish:
+              id: play_pause_double
+              state: OFF
+      - timing:
+          - ON for at least 500ms
+        then:
+          - script.execute: reset_idle_timer
+          - binary_sensor.template.publish:
+              id: play_pause_long
+              state: ON
+          - delay: 200ms
+          - binary_sensor.template.publish:
+              id: play_pause_long
+              state: OFF
+
+  - platform: template
+    name: "Play Pause Single"
+    id: play_pause_single
+  - platform: template
+    name: "Play Pause Double"
+    id: play_pause_double
+  - platform: template
+    name: "Play Pause Long"
+    id: play_pause_long
+
+  # ── UP (GPIO18) ────────────────────────────────────────────
+  - platform: gpio
+    pin:
+      number: GPIO18
+      mode: { input: true, pullup: true }
+      inverted: true
+    name: "Up"
+    id: up
+    internal: true
+    on_multi_click:
+      - timing:
+          - ON for 50ms to 350ms
+          - OFF for at least 350ms
+        then:
+          - script.execute: reset_idle_timer
+          - binary_sensor.template.publish:
+              id: up_single
+              state: ON
+          - delay: 200ms
+          - binary_sensor.template.publish:
+              id: up_single
+              state: OFF
+      - timing:
+          - ON for 50ms to 350ms
+          - OFF for 50ms to 350ms
+          - ON for 50ms to 350ms
+          - OFF for at least 200ms
+        then:
+          - script.execute: reset_idle_timer
+          - binary_sensor.template.publish:
+              id: up_double
+              state: ON
+          - delay: 200ms
+          - binary_sensor.template.publish:
+              id: up_double
+              state: OFF
+      - timing:
+          - ON for at least 500ms
+        then:
+          - script.execute: reset_idle_timer
+          - binary_sensor.template.publish:
+              id: up_long
+              state: ON
+          - delay: 200ms
+          - binary_sensor.template.publish:
+              id: up_long
+              state: OFF
+
+  - platform: template
+    name: "Up Single"
+    id: up_single
+  - platform: template
+    name: "Up Double"
+    id: up_double
+  - platform: template
+    name: "Up Long"
+    id: up_long
+
+  # ── LEFT (GPIO19) ──────────────────────────────────────────
+  - platform: gpio
+    pin:
+      number: GPIO19
+      mode: { input: true, pullup: true }
+      inverted: true
+    name: "Left"
+    id: left
+    internal: true
+    on_multi_click:
+      - timing:
+          - ON for 50ms to 350ms
+          - OFF for at least 350ms
+        then:
+          - script.execute: reset_idle_timer
+          - binary_sensor.template.publish:
+              id: left_single
+              state: ON
+          - delay: 200ms
+          - binary_sensor.template.publish:
+              id: left_single
+              state: OFF
+      - timing:
+          - ON for 50ms to 350ms
+          - OFF for 50ms to 350ms
+          - ON for 50ms to 350ms
+          - OFF for at least 200ms
+        then:
+          - script.execute: reset_idle_timer
+          - binary_sensor.template.publish:
+              id: left_double
+              state: ON
+          - delay: 200ms
+          - binary_sensor.template.publish:
+              id: left_double
+              state: OFF
+      - timing:
+          - ON for at least 500ms
+        then:
+          - script.execute: reset_idle_timer
+          - binary_sensor.template.publish:
+              id: left_long
+              state: ON
+          - delay: 200ms
+          - binary_sensor.template.publish:
+              id: left_long
+              state: OFF
+
+  - platform: template
+    name: "Left Single"
+    id: left_single
+  - platform: template
+    name: "Left Double"
+    id: left_double
+  - platform: template
+    name: "Left Long"
+    id: left_long
+
+  # ── SELECT (GPIO22) ────────────────────────────────────────
+  - platform: gpio
+    pin:
+      number: GPIO22
+      mode: { input: true, pullup: true }
+      inverted: true
+    name: "Select"
+    id: select_button
+    internal: true
+    on_multi_click:
+      - timing:
+          - ON for 50ms to 350ms
+          - OFF for at least 350ms
+        then:
+          - script.execute: reset_idle_timer
+          - binary_sensor.template.publish:
+              id: select_single
+              state: ON
+          - delay: 200ms
+          - binary_sensor.template.publish:
+              id: select_single
+              state: OFF
+      - timing:
+          - ON for 50ms to 350ms
+          - OFF for 50ms to 350ms
+          - ON for 50ms to 350ms
+          - OFF for at least 200ms
+        then:
+          - script.execute: reset_idle_timer
+          - binary_sensor.template.publish:
+              id: select_double
+              state: ON
+          - delay: 200ms
+          - binary_sensor.template.publish:
+              id: select_double
+              state: OFF
+      - timing:
+          - ON for at least 500ms
+        then:
+          - script.execute: reset_idle_timer
+          - binary_sensor.template.publish:
+              id: select_long
+              state: ON
+          - delay: 200ms
+          - binary_sensor.template.publish:
+              id: select_long
+              state: OFF
+
+  - platform: template
+    name: "Select Single"
+    id: select_single
+  - platform: template
+    name: "Select Double"
+    id: select_double
+  - platform: template
+    name: "Select Long"
+    id: select_long
+
+  # ── RIGHT (GPIO23) ─────────────────────────────────────────
+  - platform: gpio
+    pin:
+      number: GPIO23
+      mode: { input: true, pullup: true }
+      inverted: true
+    name: "Right"
+    id: right
+    internal: true
+    on_multi_click:
+      - timing:
+          - ON for 50ms to 350ms
+          - OFF for at least 350ms
+        then:
+          - script.execute: reset_idle_timer
+          - binary_sensor.template.publish:
+              id: right_single
+              state: ON
+          - delay: 200ms
+          - binary_sensor.template.publish:
+              id: right_single
+              state: OFF
+      - timing:
+          - ON for 50ms to 350ms
+          - OFF for 50ms to 350ms
+          - ON for 50ms to 350ms
+          - OFF for at least 200ms
+        then:
+          - script.execute: reset_idle_timer
+          - binary_sensor.template.publish:
+              id: right_double
+              state: ON
+          - delay: 200ms
+          - binary_sensor.template.publish:
+              id: right_double
+              state: OFF
+      - timing:
+          - ON for at least 500ms
+        then:
+          - script.execute: reset_idle_timer
+          - binary_sensor.template.publish:
+              id: right_long
+              state: ON
+          - delay: 200ms
+          - binary_sensor.template.publish:
+              id: right_long
+              state: OFF
+
+  - platform: template
+    name: "Right Single"
+    id: right_single
+  - platform: template
+    name: "Right Double"
+    id: right_double
+  - platform: template
+    name: "Right Long"
+    id: right_long
+
+  # ── DOWN (GPIO25) ──────────────────────────────────────────
+  - platform: gpio
+    pin:
+      number: GPIO25
+      mode: { input: true, pullup: true }
+      inverted: true
+    name: "Down"
+    id: down
+    internal: true
+    on_multi_click:
+      - timing:
+          - ON for 50ms to 350ms
+          - OFF for at least 350ms
+        then:
+          - script.execute: reset_idle_timer
+          - binary_sensor.template.publish:
+              id: down_single
+              state: ON
+          - delay: 200ms
+          - binary_sensor.template.publish:
+              id: down_single
+              state: OFF
+      - timing:
+          - ON for 50ms to 350ms
+          - OFF for 50ms to 350ms
+          - ON for 50ms to 350ms
+          - OFF for at least 200ms
+        then:
+          - script.execute: reset_idle_timer
+          - binary_sensor.template.publish:
+              id: down_double
+              state: ON
+          - delay: 200ms
+          - binary_sensor.template.publish:
+              id: down_double
+              state: OFF
+      - timing:
+          - ON for at least 500ms
+        then:
+          - script.execute: reset_idle_timer
+          - binary_sensor.template.publish:
+              id: down_long
+              state: ON
+          - delay: 200ms
+          - binary_sensor.template.publish:
+              id: down_long
+              state: OFF
+
+  - platform: template
+    name: "Down Single"
+    id: down_single
+  - platform: template
+    name: "Down Double"
+    id: down_double
+  - platform: template
+    name: "Down Long"
+    id: down_long
+
+  # ── VOLUME UP (GPIO12) ─────────────────────────────────────
+  - platform: gpio
+    pin:
+      number: GPIO12
+      mode: { input: true, pullup: true }
+      inverted: true
+    name: "Volume Up"
+    id: volume_up
+    internal: true
+    on_multi_click:
+      - timing:
+          - ON for 50ms to 350ms
+          - OFF for at least 350ms
+        then:
+          - script.execute: reset_idle_timer
+          - binary_sensor.template.publish:
+              id: volume_up_single
+              state: ON
+          - delay: 200ms
+          - binary_sensor.template.publish:
+              id: volume_up_single
+              state: OFF
+      - timing:
+          - ON for 50ms to 350ms
+          - OFF for 50ms to 350ms
+          - ON for 50ms to 350ms
+          - OFF for at least 200ms
+        then:
+          - script.execute: reset_idle_timer
+          - binary_sensor.template.publish:
+              id: volume_up_double
+              state: ON
+          - delay: 200ms
+          - binary_sensor.template.publish:
+              id: volume_up_double
+              state: OFF
+      - timing:
+          - ON for at least 500ms
+        then:
+          - script.execute: reset_idle_timer
+          - binary_sensor.template.publish:
+              id: volume_up_long
+              state: ON
+          - delay: 200ms
+          - binary_sensor.template.publish:
+              id: volume_up_long
+              state: OFF
+
+  - platform: template
+    name: "Volume Up Single"
+    id: volume_up_single
+  - platform: template
+    name: "Volume Up Double"
+    id: volume_up_double
+  - platform: template
+    name: "Volume Up Long"
+    id: volume_up_long
+
+  # ── MUTE (GPIO13) ──────────────────────────────────────────
+  - platform: gpio
+    pin:
+      number: GPIO13
+      mode: { input: true, pullup: true }
+      inverted: true
+    name: "Mute"
+    id: mute
+    internal: true
+    on_multi_click:
+      - timing:
+          - ON for 50ms to 350ms
+          - OFF for at least 350ms
+        then:
+          - script.execute: reset_idle_timer
+          - binary_sensor.template.publish:
+              id: mute_single
+              state: ON
+          - delay: 200ms
+          - binary_sensor.template.publish:
+              id: mute_single
+              state: OFF
+      - timing:
+          - ON for 50ms to 350ms
+          - OFF for 50ms to 350ms
+          - ON for 50ms to 350ms
+          - OFF for at least 200ms
+        then:
+          - script.execute: reset_idle_timer
+          - binary_sensor.template.publish:
+              id: mute_double
+              state: ON
+          - delay: 200ms
+          - binary_sensor.template.publish:
+              id: mute_double
+              state: OFF
+      - timing:
+          - ON for at least 500ms
+        then:
+          - script.execute: reset_idle_timer
+          - binary_sensor.template.publish:
+              id: mute_long
+              state: ON
+          - delay: 200ms
+          - binary_sensor.template.publish:
+              id: mute_long
+              state: OFF
+
+  - platform: template
+    name: "Mute Single"
+    id: mute_single
+  - platform: template
+    name: "Mute Double"
+    id: mute_double
+  - platform: template
+    name: "Mute Long"
+    id: mute_long
+
+  # ── CHANNEL UP (GPIO14) ────────────────────────────────────
+  - platform: gpio
+    pin:
+      number: GPIO14
+      mode: { input: true, pullup: true }
+      inverted: true
+    name: "Channel Up"
+    id: channel_up
+    internal: true
+    on_multi_click:
+      - timing:
+          - ON for 50ms to 350ms
+          - OFF for at least 350ms
+        then:
+          - script.execute: reset_idle_timer
+          - binary_sensor.template.publish:
+              id: channel_up_single
+              state: ON
+          - delay: 200ms
+          - binary_sensor.template.publish:
+              id: channel_up_single
+              state: OFF
+      - timing:
+          - ON for 50ms to 350ms
+          - OFF for 50ms to 350ms
+          - ON for 50ms to 350ms
+          - OFF for at least 200ms
+        then:
+          - script.execute: reset_idle_timer
+          - binary_sensor.template.publish:
+              id: channel_up_double
+              state: ON
+          - delay: 200ms
+          - binary_sensor.template.publish:
+              id: channel_up_double
+              state: OFF
+      - timing:
+          - ON for at least 500ms
+        then:
+          - script.execute: reset_idle_timer
+          - binary_sensor.template.publish:
+              id: channel_up_long
+              state: ON
+          - delay: 200ms
+          - binary_sensor.template.publish:
+              id: channel_up_long
+              state: OFF
+
+  - platform: template
+    name: "Channel Up Single"
+    id: channel_up_single
+  - platform: template
+    name: "Channel Up Double"
+    id: channel_up_double
+  - platform: template
+    name: "Channel Up Long"
+    id: channel_up_long
+
+  # ── VOLUME DOWN (GPIO15) ───────────────────────────────────
+  - platform: gpio
+    pin:
+      number: GPIO15
+      mode: { input: true, pullup: true }
+      inverted: true
+    name: "Volume Down"
+    id: volume_down
+    internal: true
+    on_multi_click:
+      - timing:
+          - ON for 50ms to 350ms
+          - OFF for at least 350ms
+        then:
+          - script.execute: reset_idle_timer
+          - binary_sensor.template.publish:
+              id: volume_down_single
+              state: ON
+          - delay: 200ms
+          - binary_sensor.template.publish:
+              id: volume_down_single
+              state: OFF
+      - timing:
+          - ON for 50ms to 350ms
+          - OFF for 50ms to 350ms
+          - ON for 50ms to 350ms
+          - OFF for at least 200ms
+        then:
+          - script.execute: reset_idle_timer
+          - binary_sensor.template.publish:
+              id: volume_down_double
+              state: ON
+          - delay: 200ms
+          - binary_sensor.template.publish:
+              id: volume_down_double
+              state: OFF
+      - timing:
+          - ON for at least 500ms
+        then:
+          - script.execute: reset_idle_timer
+          - binary_sensor.template.publish:
+              id: volume_down_long
+              state: ON
+          - delay: 200ms
+          - binary_sensor.template.publish:
+              id: volume_down_long
+              state: OFF
+
+  - platform: template
+    name: "Volume Down Single"
+    id: volume_down_single
+  - platform: template
+    name: "Volume Down Double"
+    id: volume_down_double
+  - platform: template
+    name: "Volume Down Long"
+    id: volume_down_long
+
+  # ── SETTINGS (GPIO16) ──────────────────────────────────────
+  - platform: gpio
+    pin:
+      number: GPIO16
+      mode: { input: true, pullup: true }
+      inverted: true
+    name: "Settings"
+    id: settings
+    internal: true
+    on_multi_click:
+      - timing:
+          - ON for 50ms to 350ms
+          - OFF for at least 350ms
+        then:
+          - script.execute: reset_idle_timer
+          - binary_sensor.template.publish:
+              id: settings_single
+              state: ON
+          - delay: 200ms
+          - binary_sensor.template.publish:
+              id: settings_single
+              state: OFF
+      - timing:
+          - ON for 50ms to 350ms
+          - OFF for 50ms to 350ms
+          - ON for 50ms to 350ms
+          - OFF for at least 200ms
+        then:
+          - script.execute: reset_idle_timer
+          - binary_sensor.template.publish:
+              id: settings_double
+              state: ON
+          - delay: 200ms
+          - binary_sensor.template.publish:
+              id: settings_double
+              state: OFF
+      - timing:
+          - ON for at least 500ms
+        then:
+          - script.execute: reset_idle_timer
+          - binary_sensor.template.publish:
+              id: settings_long
+              state: ON
+          - delay: 200ms
+          - binary_sensor.template.publish:
+              id: settings_long
+              state: OFF
+
+  - platform: template
+    name: "Settings Single"
+    id: settings_single
+  - platform: template
+    name: "Settings Double"
+    id: settings_double
+  - platform: template
+    name: "Settings Long"
+    id: settings_long
+
+  # ── CHANNEL DOWN (GPIO17) ──────────────────────────────────
+  - platform: gpio
+    pin:
+      number: GPIO17
+      mode: { input: true, pullup: true }
+      inverted: true
+    name: "Channel Down"
+    id: channel_down
+    internal: true
+    on_multi_click:
+      - timing:
+          - ON for 50ms to 350ms
+          - OFF for at least 350ms
+        then:
+          - script.execute: reset_idle_timer
+          - binary_sensor.template.publish:
+              id: channel_down_single
+              state: ON
+          - delay: 200ms
+          - binary_sensor.template.publish:
+              id: channel_down_single
+              state: OFF
+      - timing:
+          - ON for 50ms to 350ms
+          - OFF for 50ms to 350ms
+          - ON for 50ms to 350ms
+          - OFF for at least 200ms
+        then:
+          - script.execute: reset_idle_timer
+          - binary_sensor.template.publish:
+              id: channel_down_double
+              state: ON
+          - delay: 200ms
+          - binary_sensor.template.publish:
+              id: channel_down_double
+              state: OFF
+      - timing:
+          - ON for at least 500ms
+        then:
+          - script.execute: reset_idle_timer
+          - binary_sensor.template.publish:
+              id: channel_down_long
+              state: ON
+          - delay: 200ms
+          - binary_sensor.template.publish:
+              id: channel_down_long
+              state: OFF
+
+  - platform: template
+    name: "Channel Down Single"
+    id: channel_down_single
+  - platform: template
+    name: "Channel Down Double"
+    id: channel_down_double
+  - platform: template
+    name: "Channel Down Long"
+    id: channel_down_long
+
+  # ── SHORTCUT 1 (GPIO34 – kein Pullup möglich!) ─────────────
+  - platform: gpio
+    pin:
+      number: GPIO34
+      mode: { input: true }
+      inverted: true
+    name: "Shortcut 1"
+    id: shortcut_1
+    internal: true
+    on_multi_click:
+      - timing:
+          - ON for 50ms to 350ms
+          - OFF for at least 350ms
+        then:
+          - script.execute: reset_idle_timer
+          - binary_sensor.template.publish:
+              id: shortcut_1_single
+              state: ON
+          - delay: 200ms
+          - binary_sensor.template.publish:
+              id: shortcut_1_single
+              state: OFF
+      - timing:
+          - ON for 50ms to 350ms
+          - OFF for 50ms to 350ms
+          - ON for 50ms to 350ms
+          - OFF for at least 200ms
+        then:
+          - script.execute: reset_idle_timer
+          - binary_sensor.template.publish:
+              id: shortcut_1_double
+              state: ON
+          - delay: 200ms
+          - binary_sensor.template.publish:
+              id: shortcut_1_double
+              state: OFF
+      - timing:
+          - ON for at least 500ms
+        then:
+          - script.execute: reset_idle_timer
+          - binary_sensor.template.publish:
+              id: shortcut_1_long
+              state: ON
+          - delay: 200ms
+          - binary_sensor.template.publish:
+              id: shortcut_1_long
+              state: OFF
+
+  - platform: template
+    name: "Shortcut 1 Single"
+    id: shortcut_1_single
+  - platform: template
+    name: "Shortcut 1 Double"
+    id: shortcut_1_double
+  - platform: template
+    name: "Shortcut 1 Long"
+    id: shortcut_1_long
+
+  # ── SHORTCUT 2 (GPIO35 – kein Pullup möglich!) ─────────────
+  - platform: gpio
+    pin:
+      number: GPIO35
+      mode: { input: true }
+      inverted: true
+    name: "Shortcut 2"
+    id: shortcut_2
+    internal: true
+    on_multi_click:
+      - timing:
+          - ON for 50ms to 350ms
+          - OFF for at least 350ms
+        then:
+          - script.execute: reset_idle_timer
+          - binary_sensor.template.publish:
+              id: shortcut_2_single
+              state: ON
+          - delay: 200ms
+          - binary_sensor.template.publish:
+              id: shortcut_2_single
+              state: OFF
+      - timing:
+          - ON for 50ms to 350ms
+          - OFF for 50ms to 350ms
+          - ON for 50ms to 350ms
+          - OFF for at least 200ms
+        then:
+          - script.execute: reset_idle_timer
+          - binary_sensor.template.publish:
+              id: shortcut_2_double
+              state: ON
+          - delay: 200ms
+          - binary_sensor.template.publish:
+              id: shortcut_2_double
+              state: OFF
+      - timing:
+          - ON for at least 500ms
+        then:
+          - script.execute: reset_idle_timer
+          - binary_sensor.template.publish:
+              id: shortcut_2_long
+              state: ON
+          - delay: 200ms
+          - binary_sensor.template.publish:
+              id: shortcut_2_long
+              state: OFF
+
+  - platform: template
+    name: "Shortcut 2 Single"
+    id: shortcut_2_single
+  - platform: template
+    name: "Shortcut 2 Double"
+    id: shortcut_2_double
+  - platform: template
+    name: "Shortcut 2 Long"
+    id: shortcut_2_long
+
+  # ── SHORTCUT 3 (GPIO32) ────────────────────────────────────
+  - platform: gpio
+    pin:
+      number: GPIO32
+      mode: { input: true, pullup: true }
+      inverted: true
+    name: "Shortcut 3"
+    id: shortcut_3
+    internal: true
+    on_multi_click:
+      - timing:
+          - ON for 50ms to 350ms
+          - OFF for at least 350ms
+        then:
+          - script.execute: reset_idle_timer
+          - binary_sensor.template.publish:
+              id: shortcut_3_single
+              state: ON
+          - delay: 200ms
+          - binary_sensor.template.publish:
+              id: shortcut_3_single
+              state: OFF
+      - timing:
+          - ON for 50ms to 350ms
+          - OFF for 50ms to 350ms
+          - ON for 50ms to 350ms
+          - OFF for at least 200ms
+        then:
+          - script.execute: reset_idle_timer
+          - binary_sensor.template.publish:
+              id: shortcut_3_double
+              state: ON
+          - delay: 200ms
+          - binary_sensor.template.publish:
+              id: shortcut_3_double
+              state: OFF
+      - timing:
+          - ON for at least 500ms
+        then:
+          - script.execute: reset_idle_timer
+          - binary_sensor.template.publish:
+              id: shortcut_3_long
+              state: ON
+          - delay: 200ms
+          - binary_sensor.template.publish:
+              id: shortcut_3_long
+              state: OFF
+
+  - platform: template
+    name: "Shortcut 3 Single"
+    id: shortcut_3_single
+  - platform: template
+    name: "Shortcut 3 Double"
+    id: shortcut_3_double
+  - platform: template
+    name: "Shortcut 3 Long"
+    id: shortcut_3_long
+
+  # ── SHORTCUT 4 (GPIO33) ────────────────────────────────────
+  - platform: gpio
+    pin:
+      number: GPIO33
+      mode: { input: true, pullup: true }
+      inverted: true
+    name: "Shortcut 4"
+    id: shortcut_4
+    internal: true
+    on_multi_click:
+      - timing:
+          - ON for 50ms to 350ms
+          - OFF for at least 350ms
+        then:
+          - script.execute: reset_idle_timer
+          - binary_sensor.template.publish:
+              id: shortcut_4_single
+              state: ON
+          - delay: 200ms
+          - binary_sensor.template.publish:
+              id: shortcut_4_single
+              state: OFF
+      - timing:
+          - ON for 50ms to 350ms
+          - OFF for 50ms to 350ms
+          - ON for 50ms to 350ms
+          - OFF for at least 200ms
+        then:
+          - script.execute: reset_idle_timer
+          - binary_sensor.template.publish:
+              id: shortcut_4_double
+              state: ON
+          - delay: 200ms
+          - binary_sensor.template.publish:
+              id: shortcut_4_double
+              state: OFF
+      - timing:
+          - ON for at least 500ms
+        then:
+          - script.execute: reset_idle_timer
+          - binary_sensor.template.publish:
+              id: shortcut_4_long
+              state: ON
+          - delay: 200ms
+          - binary_sensor.template.publish:
+              id: shortcut_4_long
+              state: OFF
+
+  - platform: template
+    name: "Shortcut 4 Single"
+    id: shortcut_4_single
+  - platform: template
+    name: "Shortcut 4 Double"
+    id: shortcut_4_double
+  - platform: template
+    name: "Shortcut 4 Long"
+    id: shortcut_4_long
+
+  # ── BRIGHTNESS DOWN (GPIO26) ───────────────────────────────
+  - platform: gpio
+    pin:
+      number: GPIO26
+      mode: { input: true, pullup: true }
+      inverted: true
+    name: "Brightness Down"
+    id: brightness_down
+    internal: true
+    on_multi_click:
+      - timing:
+          - ON for 50ms to 350ms
+          - OFF for at least 350ms
+        then:
+          - script.execute: reset_idle_timer
+          - binary_sensor.template.publish:
+              id: brightness_down_single
+              state: ON
+          - delay: 200ms
+          - binary_sensor.template.publish:
+              id: brightness_down_single
+              state: OFF
+      - timing:
+          - ON for 50ms to 350ms
+          - OFF for 50ms to 350ms
+          - ON for 50ms to 350ms
+          - OFF for at least 200ms
+        then:
+          - script.execute: reset_idle_timer
+          - binary_sensor.template.publish:
+              id: brightness_down_double
+              state: ON
+          - delay: 200ms
+          - binary_sensor.template.publish:
+              id: brightness_down_double
+              state: OFF
+      - timing:
+          - ON for at least 500ms
+        then:
+          - script.execute: reset_idle_timer
+          - binary_sensor.template.publish:
+              id: brightness_down_long
+              state: ON
+          - delay: 200ms
+          - binary_sensor.template.publish:
+              id: brightness_down_long
+              state: OFF
+
+  - platform: template
+    name: "Brightness Down Single"
+    id: brightness_down_single
+  - platform: template
+    name: "Brightness Down Double"
+    id: brightness_down_double
+  - platform: template
+    name: "Brightness Down Long"
+    id: brightness_down_long
+
+  # ── BRIGHTNESS UP (GPIO27) ─────────────────────────────────
+  - platform: gpio
+    pin:
+      number: GPIO27
+      mode: { input: true, pullup: true }
+      inverted: true
+    name: "Brightness Up"
+    id: brightness_up
+    internal: true
+    on_multi_click:
+      - timing:
+          - ON for 50ms to 350ms
+          - OFF for at least 350ms
+        then:
+          - script.execute: reset_idle_timer
+          - binary_sensor.template.publish:
+              id: brightness_up_single
+              state: ON
+          - delay: 200ms
+          - binary_sensor.template.publish:
+              id: brightness_up_single
+              state: OFF
+      - timing:
+          - ON for 50ms to 350ms
+          - OFF for 50ms to 350ms
+          - ON for 50ms to 350ms
+          - OFF for at least 200ms
+        then:
+          - script.execute: reset_idle_timer
+          - binary_sensor.template.publish:
+              id: brightness_up_double
+              state: ON
+          - delay: 200ms
+          - binary_sensor.template.publish:
+              id: brightness_up_double
+              state: OFF
+      - timing:
+          - ON for at least 500ms
+        then:
+          - script.execute: reset_idle_timer
+          - binary_sensor.template.publish:
+              id: brightness_up_long
+              state: ON
+          - delay: 200ms
+          - binary_sensor.template.publish:
+              id: brightness_up_long
+              state: OFF
+
+  - platform: template
+    name: "Brightness Up Single"
+    id: brightness_up_single
+  - platform: template
+    name: "Brightness Up Double"
+    id: brightness_up_double
+  - platform: template
+    name: "Brightness Up Long"
+    id: brightness_up_long
+
+# ==============================================================
+# BATTERIE
+# ==============================================================
+sensor:
+  - platform: adc
+    pin: GPIO36        # VP – externer Spannungsteiler 2× 100kΩ
+    name: "Battery Voltage"
+    id: battery_voltage
+    attenuation: 11db
+    update_interval: 60s
+    filters:
+      - multiply: 1.941  # kalibriert: gemessen 3.3V, angezeigt 3.4V
+      - median:
+          window_size: 5
+          send_every: 5
+          send_first_at: 1
+
+  - platform: template
+    name: "Battery Percent"
+    id: battery_percent
+    unit_of_measurement: "%"
+    device_class: battery
+    state_class: measurement
+    update_interval: 60s
+    lambda: |-
+      float v = id(battery_voltage).state;
+      // LiPo 1200mAh: 4.2V = 100%, 3.0V = 0%
+      float pct = (v - 3.0) / (4.2 - 3.0) * 100.0;
+      if (pct > 100.0) pct = 100.0;
+      if (pct < 0.0)   pct = 0.0;
+      return pct;
