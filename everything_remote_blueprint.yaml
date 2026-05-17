@@ -1,0 +1,925 @@
+blueprint:
+  name: Everything Remote
+  description: >
+    Automatisierung für das Everything Remote (ESP32 ESPHome).
+    Unterstützt Single, Double und Long Press für alle 20 Buttons.
+    Jede Aktion ist optional – nicht belegte Buttons werden einfach ignoriert.
+  domain: automation
+  input:
+
+    # ── GERÄT ────────────────────────────────────────────────
+    remote_device:
+      name: Everything Remote Gerät
+      description: Wähle dein Everything Remote ESPHome Gerät.
+      selector:
+        device:
+          integration: esphome
+
+    # ── POWER ────────────────────────────────────────────────
+    power_single:
+      name: "Power – Single Click"
+      default: []
+      selector:
+        action: {}
+    
+    # ── BACK ─────────────────────────────────────────────────
+    back_single:
+      name: "Back – Single Click"
+      default: []
+      selector:
+        action: {}
+    back_double:
+      name: "Back – Double Click"
+      default: []
+      selector:
+        action: {}
+    back_long:
+      name: "Back – Long Press"
+      default: []
+      selector:
+        action: {}
+
+    # ── HOME ─────────────────────────────────────────────────
+    home_single:
+      name: "Home – Single Click"
+      default: []
+      selector:
+        action: {}
+    home_double:
+      name: "Home – Double Click"
+      default: []
+      selector:
+        action: {}
+    home_long:
+      name: "Home – Long Press"
+      default: []
+      selector:
+        action: {}
+
+    # ── PLAY PAUSE ───────────────────────────────────────────
+    play_pause_single:
+      name: "Play Pause – Single Click"
+      default: []
+      selector:
+        action: {}
+    play_pause_double:
+      name: "Play Pause – Double Click"
+      default: []
+      selector:
+        action: {}
+    play_pause_long:
+      name: "Play Pause – Long Press"
+      default: []
+      selector:
+        action: {}
+
+    # ── UP ───────────────────────────────────────────────────
+    up_single:
+      name: "Up – Single Click"
+      default: []
+      selector:
+        action: {}
+    up_double:
+      name: "Up – Double Click"
+      default: []
+      selector:
+        action: {}
+    up_long:
+      name: "Up – Long Press"
+      default: []
+      selector:
+        action: {}
+
+    # ── DOWN ─────────────────────────────────────────────────
+    down_single:
+      name: "Down – Single Click"
+      default: []
+      selector:
+        action: {}
+    down_double:
+      name: "Down – Double Click"
+      default: []
+      selector:
+        action: {}
+    down_long:
+      name: "Down – Long Press"
+      default: []
+      selector:
+        action: {}
+
+    # ── LEFT ─────────────────────────────────────────────────
+    left_single:
+      name: "Left – Single Click"
+      default: []
+      selector:
+        action: {}
+    left_double:
+      name: "Left – Double Click"
+      default: []
+      selector:
+        action: {}
+    left_long:
+      name: "Left – Long Press"
+      default: []
+      selector:
+        action: {}
+
+    # ── RIGHT ────────────────────────────────────────────────
+    right_single:
+      name: "Right – Single Click"
+      default: []
+      selector:
+        action: {}
+    right_double:
+      name: "Right – Double Click"
+      default: []
+      selector:
+        action: {}
+    right_long:
+      name: "Right – Long Press"
+      default: []
+      selector:
+        action: {}
+
+    # ── SELECT ───────────────────────────────────────────────
+    select_single:
+      name: "Select – Single Click"
+      default: []
+      selector:
+        action: {}
+    select_double:
+      name: "Select – Double Click"
+      default: []
+      selector:
+        action: {}
+    select_long:
+      name: "Select – Long Press"
+      default: []
+      selector:
+        action: {}
+
+    # ── VOLUME UP ────────────────────────────────────────────
+    volume_up_single:
+      name: "Volume Up – Single Click"
+      default: []
+      selector:
+        action: {}
+    volume_up_double:
+      name: "Volume Up – Double Click"
+      default: []
+      selector:
+        action: {}
+    volume_up_long:
+      name: "Volume Up – Long Press"
+      default: []
+      selector:
+        action: {}
+
+    # ── VOLUME DOWN ──────────────────────────────────────────
+    volume_down_single:
+      name: "Volume Down – Single Click"
+      default: []
+      selector:
+        action: {}
+    volume_down_double:
+      name: "Volume Down – Double Click"
+      default: []
+      selector:
+        action: {}
+    volume_down_long:
+      name: "Volume Down – Long Press"
+      default: []
+      selector:
+        action: {}
+
+    # ── MUTE ─────────────────────────────────────────────────
+    mute_single:
+      name: "Mute – Single Click"
+      default: []
+      selector:
+        action: {}
+    mute_double:
+      name: "Mute – Double Click"
+      default: []
+      selector:
+        action: {}
+    mute_long:
+      name: "Mute – Long Press"
+      default: []
+      selector:
+        action: {}
+
+    # ── CHANNEL UP ───────────────────────────────────────────
+    channel_up_single:
+      name: "Channel Up – Single Click"
+      default: []
+      selector:
+        action: {}
+    channel_up_double:
+      name: "Channel Up – Double Click"
+      default: []
+      selector:
+        action: {}
+    channel_up_long:
+      name: "Channel Up – Long Press"
+      default: []
+      selector:
+        action: {}
+
+    # ── CHANNEL DOWN ─────────────────────────────────────────
+    channel_down_single:
+      name: "Channel Down – Single Click"
+      default: []
+      selector:
+        action: {}
+    channel_down_double:
+      name: "Channel Down – Double Click"
+      default: []
+      selector:
+        action: {}
+    channel_down_long:
+      name: "Channel Down – Long Press"
+      default: []
+      selector:
+        action: {}
+
+    # ── SETTINGS ─────────────────────────────────────────────
+    settings_single:
+      name: "Settings – Single Click"
+      default: []
+      selector:
+        action: {}
+    settings_double:
+      name: "Settings – Double Click"
+      default: []
+      selector:
+        action: {}
+    settings_long:
+      name: "Settings – Long Press"
+      default: []
+      selector:
+        action: {}
+
+    # ── BRIGHTNESS UP ────────────────────────────────────────
+    brightness_up_single:
+      name: "Brightness Up – Single Click"
+      default: []
+      selector:
+        action: {}
+    brightness_up_double:
+      name: "Brightness Up – Double Click"
+      default: []
+      selector:
+        action: {}
+    brightness_up_long:
+      name: "Brightness Up – Long Press"
+      default: []
+      selector:
+        action: {}
+
+    # ── BRIGHTNESS DOWN ──────────────────────────────────────
+    brightness_down_single:
+      name: "Brightness Down – Single Click"
+      default: []
+      selector:
+        action: {}
+    brightness_down_double:
+      name: "Brightness Down – Double Click"
+      default: []
+      selector:
+        action: {}
+    brightness_down_long:
+      name: "Brightness Down – Long Press"
+      default: []
+      selector:
+        action: {}
+
+    # ── SHORTCUT 1 ───────────────────────────────────────────
+    shortcut_1_single:
+      name: "Shortcut 1 – Single Click"
+      default: []
+      selector:
+        action: {}
+    shortcut_1_double:
+      name: "Shortcut 1 – Double Click"
+      default: []
+      selector:
+        action: {}
+    shortcut_1_long:
+      name: "Shortcut 1 – Long Press"
+      default: []
+      selector:
+        action: {}
+
+    # ── SHORTCUT 2 ───────────────────────────────────────────
+    shortcut_2_single:
+      name: "Shortcut 2 – Single Click"
+      default: []
+      selector:
+        action: {}
+    shortcut_2_double:
+      name: "Shortcut 2 – Double Click"
+      default: []
+      selector:
+        action: {}
+    shortcut_2_long:
+      name: "Shortcut 2 – Long Press"
+      default: []
+      selector:
+        action: {}
+
+    # ── SHORTCUT 3 ───────────────────────────────────────────
+    shortcut_3_single:
+      name: "Shortcut 3 – Single Click"
+      default: []
+      selector:
+        action: {}
+    shortcut_3_double:
+      name: "Shortcut 3 – Double Click"
+      default: []
+      selector:
+        action: {}
+    shortcut_3_long:
+      name: "Shortcut 3 – Long Press"
+      default: []
+      selector:
+        action: {}
+
+    # ── SHORTCUT 4 ───────────────────────────────────────────
+    shortcut_4_single:
+      name: "Shortcut 4 – Single Click"
+      default: []
+      selector:
+        action: {}
+    shortcut_4_double:
+      name: "Shortcut 4 – Double Click"
+      default: []
+      selector:
+        action: {}
+    shortcut_4_long:
+      name: "Shortcut 4 – Long Press"
+      default: []
+      selector:
+        action: {}
+
+# ==============================================================
+# TRIGGER & ACTIONS
+# ==============================================================
+triggers:
+  - trigger: state
+    entity_id:
+      - !input power_single
+    to: "on"
+    id: power_single
+  - trigger: state
+    entity_id:
+      - !input back_single
+    to: "on"
+    id: back_single
+  - trigger: state
+    entity_id:
+      - !input back_double
+    to: "on"
+    id: back_double
+  - trigger: state
+    entity_id:
+      - !input back_long
+    to: "on"
+    id: back_long
+  - trigger: state
+    entity_id:
+      - !input home_single
+    to: "on"
+    id: home_single
+  - trigger: state
+    entity_id:
+      - !input home_double
+    to: "on"
+    id: home_double
+  - trigger: state
+    entity_id:
+      - !input home_long
+    to: "on"
+    id: home_long
+  - trigger: state
+    entity_id:
+      - !input play_pause_single
+    to: "on"
+    id: play_pause_single
+  - trigger: state
+    entity_id:
+      - !input play_pause_double
+    to: "on"
+    id: play_pause_double
+  - trigger: state
+    entity_id:
+      - !input play_pause_long
+    to: "on"
+    id: play_pause_long
+  - trigger: state
+    entity_id:
+      - !input up_single
+    to: "on"
+    id: up_single
+  - trigger: state
+    entity_id:
+      - !input up_double
+    to: "on"
+    id: up_double
+  - trigger: state
+    entity_id:
+      - !input up_long
+    to: "on"
+    id: up_long
+  - trigger: state
+    entity_id:
+      - !input down_single
+    to: "on"
+    id: down_single
+  - trigger: state
+    entity_id:
+      - !input down_double
+    to: "on"
+    id: down_double
+  - trigger: state
+    entity_id:
+      - !input down_long
+    to: "on"
+    id: down_long
+  - trigger: state
+    entity_id:
+      - !input left_single
+    to: "on"
+    id: left_single
+  - trigger: state
+    entity_id:
+      - !input left_double
+    to: "on"
+    id: left_double
+  - trigger: state
+    entity_id:
+      - !input left_long
+    to: "on"
+    id: left_long
+  - trigger: state
+    entity_id:
+      - !input right_single
+    to: "on"
+    id: right_single
+  - trigger: state
+    entity_id:
+      - !input right_double
+    to: "on"
+    id: right_double
+  - trigger: state
+    entity_id:
+      - !input right_long
+    to: "on"
+    id: right_long
+  - trigger: state
+    entity_id:
+      - !input select_single
+    to: "on"
+    id: select_single
+  - trigger: state
+    entity_id:
+      - !input select_double
+    to: "on"
+    id: select_double
+  - trigger: state
+    entity_id:
+      - !input select_long
+    to: "on"
+    id: select_long
+  - trigger: state
+    entity_id:
+      - !input volume_up_single
+    to: "on"
+    id: volume_up_single
+  - trigger: state
+    entity_id:
+      - !input volume_up_double
+    to: "on"
+    id: volume_up_double
+  - trigger: state
+    entity_id:
+      - !input volume_up_long
+    to: "on"
+    id: volume_up_long
+  - trigger: state
+    entity_id:
+      - !input volume_down_single
+    to: "on"
+    id: volume_down_single
+  - trigger: state
+    entity_id:
+      - !input volume_down_double
+    to: "on"
+    id: volume_down_double
+  - trigger: state
+    entity_id:
+      - !input volume_down_long
+    to: "on"
+    id: volume_down_long
+  - trigger: state
+    entity_id:
+      - !input mute_single
+    to: "on"
+    id: mute_single
+  - trigger: state
+    entity_id:
+      - !input mute_double
+    to: "on"
+    id: mute_double
+  - trigger: state
+    entity_id:
+      - !input mute_long
+    to: "on"
+    id: mute_long
+  - trigger: state
+    entity_id:
+      - !input channel_up_single
+    to: "on"
+    id: channel_up_single
+  - trigger: state
+    entity_id:
+      - !input channel_up_double
+    to: "on"
+    id: channel_up_double
+  - trigger: state
+    entity_id:
+      - !input channel_up_long
+    to: "on"
+    id: channel_up_long
+  - trigger: state
+    entity_id:
+      - !input channel_down_single
+    to: "on"
+    id: channel_down_single
+  - trigger: state
+    entity_id:
+      - !input channel_down_double
+    to: "on"
+    id: channel_down_double
+  - trigger: state
+    entity_id:
+      - !input channel_down_long
+    to: "on"
+    id: channel_down_long
+  - trigger: state
+    entity_id:
+      - !input settings_single
+    to: "on"
+    id: settings_single
+  - trigger: state
+    entity_id:
+      - !input settings_double
+    to: "on"
+    id: settings_double
+  - trigger: state
+    entity_id:
+      - !input settings_long
+    to: "on"
+    id: settings_long
+  - trigger: state
+    entity_id:
+      - !input brightness_up_single
+    to: "on"
+    id: brightness_up_single
+  - trigger: state
+    entity_id:
+      - !input brightness_up_double
+    to: "on"
+    id: brightness_up_double
+  - trigger: state
+    entity_id:
+      - !input brightness_up_long
+    to: "on"
+    id: brightness_up_long
+  - trigger: state
+    entity_id:
+      - !input brightness_down_single
+    to: "on"
+    id: brightness_down_single
+  - trigger: state
+    entity_id:
+      - !input brightness_down_double
+    to: "on"
+    id: brightness_down_double
+  - trigger: state
+    entity_id:
+      - !input brightness_down_long
+    to: "on"
+    id: brightness_down_long
+  - trigger: state
+    entity_id:
+      - !input shortcut_1_single
+    to: "on"
+    id: shortcut_1_single
+  - trigger: state
+    entity_id:
+      - !input shortcut_1_double
+    to: "on"
+    id: shortcut_1_double
+  - trigger: state
+    entity_id:
+      - !input shortcut_1_long
+    to: "on"
+    id: shortcut_1_long
+  - trigger: state
+    entity_id:
+      - !input shortcut_2_single
+    to: "on"
+    id: shortcut_2_single
+  - trigger: state
+    entity_id:
+      - !input shortcut_2_double
+    to: "on"
+    id: shortcut_2_double
+  - trigger: state
+    entity_id:
+      - !input shortcut_2_long
+    to: "on"
+    id: shortcut_2_long
+  - trigger: state
+    entity_id:
+      - !input shortcut_3_single
+    to: "on"
+    id: shortcut_3_single
+  - trigger: state
+    entity_id:
+      - !input shortcut_3_double
+    to: "on"
+    id: shortcut_3_double
+  - trigger: state
+    entity_id:
+      - !input shortcut_3_long
+    to: "on"
+    id: shortcut_3_long
+  - trigger: state
+    entity_id:
+      - !input shortcut_4_single
+    to: "on"
+    id: shortcut_4_single
+  - trigger: state
+    entity_id:
+      - !input shortcut_4_double
+    to: "on"
+    id: shortcut_4_double
+  - trigger: state
+    entity_id:
+      - !input shortcut_4_long
+    to: "on"
+    id: shortcut_4_long
+
+conditions: []
+
+actions:
+  - choose:
+      - conditions:
+          - condition: trigger
+            id: power_single
+        sequence: !input power_single
+      - conditions:
+          - condition: trigger
+            id: back_single
+        sequence: !input back_single
+      - conditions:
+          - condition: trigger
+            id: back_double
+        sequence: !input back_double
+      - conditions:
+          - condition: trigger
+            id: back_long
+        sequence: !input back_long
+      - conditions:
+          - condition: trigger
+            id: home_single
+        sequence: !input home_single
+      - conditions:
+          - condition: trigger
+            id: home_double
+        sequence: !input home_double
+      - conditions:
+          - condition: trigger
+            id: home_long
+        sequence: !input home_long
+      - conditions:
+          - condition: trigger
+            id: play_pause_single
+        sequence: !input play_pause_single
+      - conditions:
+          - condition: trigger
+            id: play_pause_double
+        sequence: !input play_pause_double
+      - conditions:
+          - condition: trigger
+            id: play_pause_long
+        sequence: !input play_pause_long
+      - conditions:
+          - condition: trigger
+            id: up_single
+        sequence: !input up_single
+      - conditions:
+          - condition: trigger
+            id: up_double
+        sequence: !input up_double
+      - conditions:
+          - condition: trigger
+            id: up_long
+        sequence: !input up_long
+      - conditions:
+          - condition: trigger
+            id: down_single
+        sequence: !input down_single
+      - conditions:
+          - condition: trigger
+            id: down_double
+        sequence: !input down_double
+      - conditions:
+          - condition: trigger
+            id: down_long
+        sequence: !input down_long
+      - conditions:
+          - condition: trigger
+            id: left_single
+        sequence: !input left_single
+      - conditions:
+          - condition: trigger
+            id: left_double
+        sequence: !input left_double
+      - conditions:
+          - condition: trigger
+            id: left_long
+        sequence: !input left_long
+      - conditions:
+          - condition: trigger
+            id: right_single
+        sequence: !input right_single
+      - conditions:
+          - condition: trigger
+            id: right_double
+        sequence: !input right_double
+      - conditions:
+          - condition: trigger
+            id: right_long
+        sequence: !input right_long
+      - conditions:
+          - condition: trigger
+            id: select_single
+        sequence: !input select_single
+      - conditions:
+          - condition: trigger
+            id: select_double
+        sequence: !input select_double
+      - conditions:
+          - condition: trigger
+            id: select_long
+        sequence: !input select_long
+      - conditions:
+          - condition: trigger
+            id: volume_up_single
+        sequence: !input volume_up_single
+      - conditions:
+          - condition: trigger
+            id: volume_up_double
+        sequence: !input volume_up_double
+      - conditions:
+          - condition: trigger
+            id: volume_up_long
+        sequence: !input volume_up_long
+      - conditions:
+          - condition: trigger
+            id: volume_down_single
+        sequence: !input volume_down_single
+      - conditions:
+          - condition: trigger
+            id: volume_down_double
+        sequence: !input volume_down_double
+      - conditions:
+          - condition: trigger
+            id: volume_down_long
+        sequence: !input volume_down_long
+      - conditions:
+          - condition: trigger
+            id: mute_single
+        sequence: !input mute_single
+      - conditions:
+          - condition: trigger
+            id: mute_double
+        sequence: !input mute_double
+      - conditions:
+          - condition: trigger
+            id: mute_long
+        sequence: !input mute_long
+      - conditions:
+          - condition: trigger
+            id: channel_up_single
+        sequence: !input channel_up_single
+      - conditions:
+          - condition: trigger
+            id: channel_up_double
+        sequence: !input channel_up_double
+      - conditions:
+          - condition: trigger
+            id: channel_up_long
+        sequence: !input channel_up_long
+      - conditions:
+          - condition: trigger
+            id: channel_down_single
+        sequence: !input channel_down_single
+      - conditions:
+          - condition: trigger
+            id: channel_down_double
+        sequence: !input channel_down_double
+      - conditions:
+          - condition: trigger
+            id: channel_down_long
+        sequence: !input channel_down_long
+      - conditions:
+          - condition: trigger
+            id: settings_single
+        sequence: !input settings_single
+      - conditions:
+          - condition: trigger
+            id: settings_double
+        sequence: !input settings_double
+      - conditions:
+          - condition: trigger
+            id: settings_long
+        sequence: !input settings_long
+      - conditions:
+          - condition: trigger
+            id: brightness_up_single
+        sequence: !input brightness_up_single
+      - conditions:
+          - condition: trigger
+            id: brightness_up_double
+        sequence: !input brightness_up_double
+      - conditions:
+          - condition: trigger
+            id: brightness_up_long
+        sequence: !input brightness_up_long
+      - conditions:
+          - condition: trigger
+            id: brightness_down_single
+        sequence: !input brightness_down_single
+      - conditions:
+          - condition: trigger
+            id: brightness_down_double
+        sequence: !input brightness_down_double
+      - conditions:
+          - condition: trigger
+            id: brightness_down_long
+        sequence: !input brightness_down_long
+      - conditions:
+          - condition: trigger
+            id: shortcut_1_single
+        sequence: !input shortcut_1_single
+      - conditions:
+          - condition: trigger
+            id: shortcut_1_double
+        sequence: !input shortcut_1_double
+      - conditions:
+          - condition: trigger
+            id: shortcut_1_long
+        sequence: !input shortcut_1_long
+      - conditions:
+          - condition: trigger
+            id: shortcut_2_single
+        sequence: !input shortcut_2_single
+      - conditions:
+          - condition: trigger
+            id: shortcut_2_double
+        sequence: !input shortcut_2_double
+      - conditions:
+          - condition: trigger
+            id: shortcut_2_long
+        sequence: !input shortcut_2_long
+      - conditions:
+          - condition: trigger
+            id: shortcut_3_single
+        sequence: !input shortcut_3_single
+      - conditions:
+          - condition: trigger
+            id: shortcut_3_double
+        sequence: !input shortcut_3_double
+      - conditions:
+          - condition: trigger
+            id: shortcut_3_long
+        sequence: !input shortcut_3_long
+      - conditions:
+          - condition: trigger
+            id: shortcut_4_single
+        sequence: !input shortcut_4_single
+      - conditions:
+          - condition: trigger
+            id: shortcut_4_double
+        sequence: !input shortcut_4_double
+      - conditions:
+          - condition: trigger
+            id: shortcut_4_long
+        sequence: !input shortcut_4_long
+
+mode: queued
+max: 10
