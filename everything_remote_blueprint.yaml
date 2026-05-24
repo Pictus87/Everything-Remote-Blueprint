@@ -2,924 +2,652 @@ blueprint:
   name: Everything Remote
   description: >
     Automatisierung für das Everything Remote (ESP32 ESPHome).
+
+
     Unterstützt Single, Double und Long Press für alle 20 Buttons.
-    Jede Aktion ist optional – nicht belegte Buttons werden einfach ignoriert.
+    Wähle zuerst den Gerätenamen aus (falls du mehrere Remotes hast),
+    dann trage einfach die gewünschten Aktionen ein.
+    Nicht belegte Buttons werden ignoriert.
+
+
+    ℹ️ Das Gerät geht nach 10 Minuten Inaktivität in den Deep Sleep.
+    Der Power Button weckt es wieder auf (kein HA-Event).
+
   domain: automation
   input:
 
     # ── GERÄT ────────────────────────────────────────────────
-    remote_device:
-      name: Everything Remote Gerät
-      description: Wähle dein Everything Remote ESPHome Gerät.
+    device_name:
+      name: "Gerätename"
+      description: >
+        ESPHome Gerätename (z.B. "everything_remote").
+        Muss mit dem 'name' in der ESPHome Config übereinstimmen.
+        Bei mehreren Remotes hier den jeweiligen Namen eintragen.
+      default: "everything_remote"
       selector:
-        device:
-          integration: esphome
+        text: {}
 
-    # ── POWER ────────────────────────────────────────────────
-    power_single:
-      name: "Power – Single Click"
-      default: []
-      selector:
-        action: {}
-    
     # ── BACK ─────────────────────────────────────────────────
-    back_single:
-      name: "Back – Single Click"
+    back_single_action:
+      name: "⬅️ Back – Single Click"
       default: []
       selector:
         action: {}
-    back_double:
-      name: "Back – Double Click"
+    back_double_action:
+      name: "⬅️ Back – Double Click"
       default: []
       selector:
         action: {}
-    back_long:
-      name: "Back – Long Press"
+    back_long_action:
+      name: "⬅️ Back – Long Press"
       default: []
       selector:
         action: {}
 
     # ── HOME ─────────────────────────────────────────────────
-    home_single:
-      name: "Home – Single Click"
+    home_single_action:
+      name: "🏠 Home – Single Click"
       default: []
       selector:
         action: {}
-    home_double:
-      name: "Home – Double Click"
+    home_double_action:
+      name: "🏠 Home – Double Click"
       default: []
       selector:
         action: {}
-    home_long:
-      name: "Home – Long Press"
+    home_long_action:
+      name: "🏠 Home – Long Press"
       default: []
       selector:
         action: {}
 
     # ── PLAY PAUSE ───────────────────────────────────────────
-    play_pause_single:
-      name: "Play Pause – Single Click"
+    play_pause_single_action:
+      name: "⏯️ Play Pause – Single Click"
       default: []
       selector:
         action: {}
-    play_pause_double:
-      name: "Play Pause – Double Click"
+    play_pause_double_action:
+      name: "⏯️ Play Pause – Double Click"
       default: []
       selector:
         action: {}
-    play_pause_long:
-      name: "Play Pause – Long Press"
+    play_pause_long_action:
+      name: "⏯️ Play Pause – Long Press"
       default: []
       selector:
         action: {}
 
     # ── UP ───────────────────────────────────────────────────
-    up_single:
-      name: "Up – Single Click"
+    up_single_action:
+      name: "⬆️ Up – Single Click"
       default: []
       selector:
         action: {}
-    up_double:
-      name: "Up – Double Click"
+    up_double_action:
+      name: "⬆️ Up – Double Click"
       default: []
       selector:
         action: {}
-    up_long:
-      name: "Up – Long Press"
+    up_long_action:
+      name: "⬆️ Up – Long Press"
       default: []
       selector:
         action: {}
 
     # ── DOWN ─────────────────────────────────────────────────
-    down_single:
-      name: "Down – Single Click"
+    down_single_action:
+      name: "⬇️ Down – Single Click"
       default: []
       selector:
         action: {}
-    down_double:
-      name: "Down – Double Click"
+    down_double_action:
+      name: "⬇️ Down – Double Click"
       default: []
       selector:
         action: {}
-    down_long:
-      name: "Down – Long Press"
+    down_long_action:
+      name: "⬇️ Down – Long Press"
       default: []
       selector:
         action: {}
 
     # ── LEFT ─────────────────────────────────────────────────
-    left_single:
-      name: "Left – Single Click"
+    left_single_action:
+      name: "⬅️ Left – Single Click"
       default: []
       selector:
         action: {}
-    left_double:
-      name: "Left – Double Click"
+    left_double_action:
+      name: "⬅️ Left – Double Click"
       default: []
       selector:
         action: {}
-    left_long:
-      name: "Left – Long Press"
+    left_long_action:
+      name: "⬅️ Left – Long Press"
       default: []
       selector:
         action: {}
 
     # ── RIGHT ────────────────────────────────────────────────
-    right_single:
-      name: "Right – Single Click"
+    right_single_action:
+      name: "➡️ Right – Single Click"
       default: []
       selector:
         action: {}
-    right_double:
-      name: "Right – Double Click"
+    right_double_action:
+      name: "➡️ Right – Double Click"
       default: []
       selector:
         action: {}
-    right_long:
-      name: "Right – Long Press"
+    right_long_action:
+      name: "➡️ Right – Long Press"
       default: []
       selector:
         action: {}
 
     # ── SELECT ───────────────────────────────────────────────
-    select_single:
-      name: "Select – Single Click"
+    select_single_action:
+      name: "🔘 Select – Single Click"
       default: []
       selector:
         action: {}
-    select_double:
-      name: "Select – Double Click"
+    select_double_action:
+      name: "🔘 Select – Double Click"
       default: []
       selector:
         action: {}
-    select_long:
-      name: "Select – Long Press"
+    select_long_action:
+      name: "🔘 Select – Long Press"
       default: []
       selector:
         action: {}
 
     # ── VOLUME UP ────────────────────────────────────────────
-    volume_up_single:
-      name: "Volume Up – Single Click"
+    volume_up_single_action:
+      name: "🔊 Volume Up – Single Click"
       default: []
       selector:
         action: {}
-    volume_up_double:
-      name: "Volume Up – Double Click"
+    volume_up_double_action:
+      name: "🔊 Volume Up – Double Click"
       default: []
       selector:
         action: {}
-    volume_up_long:
-      name: "Volume Up – Long Press"
+    volume_up_long_action:
+      name: "🔊 Volume Up – Long Press"
       default: []
       selector:
         action: {}
 
     # ── VOLUME DOWN ──────────────────────────────────────────
-    volume_down_single:
-      name: "Volume Down – Single Click"
+    volume_down_single_action:
+      name: "🔉 Volume Down – Single Click"
       default: []
       selector:
         action: {}
-    volume_down_double:
-      name: "Volume Down – Double Click"
+    volume_down_double_action:
+      name: "🔉 Volume Down – Double Click"
       default: []
       selector:
         action: {}
-    volume_down_long:
-      name: "Volume Down – Long Press"
+    volume_down_long_action:
+      name: "🔉 Volume Down – Long Press"
       default: []
       selector:
         action: {}
 
     # ── MUTE ─────────────────────────────────────────────────
-    mute_single:
-      name: "Mute – Single Click"
+    mute_single_action:
+      name: "🔇 Mute – Single Click"
       default: []
       selector:
         action: {}
-    mute_double:
-      name: "Mute – Double Click"
+    mute_double_action:
+      name: "🔇 Mute – Double Click"
       default: []
       selector:
         action: {}
-    mute_long:
-      name: "Mute – Long Press"
+    mute_long_action:
+      name: "🔇 Mute – Long Press"
       default: []
       selector:
         action: {}
 
     # ── CHANNEL UP ───────────────────────────────────────────
-    channel_up_single:
-      name: "Channel Up – Single Click"
+    channel_up_single_action:
+      name: "📺 Channel Up – Single Click"
       default: []
       selector:
         action: {}
-    channel_up_double:
-      name: "Channel Up – Double Click"
+    channel_up_double_action:
+      name: "📺 Channel Up – Double Click"
       default: []
       selector:
         action: {}
-    channel_up_long:
-      name: "Channel Up – Long Press"
+    channel_up_long_action:
+      name: "📺 Channel Up – Long Press"
       default: []
       selector:
         action: {}
 
     # ── CHANNEL DOWN ─────────────────────────────────────────
-    channel_down_single:
-      name: "Channel Down – Single Click"
+    channel_down_single_action:
+      name: "📺 Channel Down – Single Click"
       default: []
       selector:
         action: {}
-    channel_down_double:
-      name: "Channel Down – Double Click"
+    channel_down_double_action:
+      name: "📺 Channel Down – Double Click"
       default: []
       selector:
         action: {}
-    channel_down_long:
-      name: "Channel Down – Long Press"
+    channel_down_long_action:
+      name: "📺 Channel Down – Long Press"
       default: []
       selector:
         action: {}
 
     # ── SETTINGS ─────────────────────────────────────────────
-    settings_single:
-      name: "Settings – Single Click"
+    settings_single_action:
+      name: "⚙️ Settings – Single Click"
       default: []
       selector:
         action: {}
-    settings_double:
-      name: "Settings – Double Click"
+    settings_double_action:
+      name: "⚙️ Settings – Double Click"
       default: []
       selector:
         action: {}
-    settings_long:
-      name: "Settings – Long Press"
+    settings_long_action:
+      name: "⚙️ Settings – Long Press"
       default: []
       selector:
         action: {}
 
     # ── BRIGHTNESS UP ────────────────────────────────────────
-    brightness_up_single:
-      name: "Brightness Up – Single Click"
+    brightness_up_single_action:
+      name: "🔆 Brightness Up – Single Click"
       default: []
       selector:
         action: {}
-    brightness_up_double:
-      name: "Brightness Up – Double Click"
+    brightness_up_double_action:
+      name: "🔆 Brightness Up – Double Click"
       default: []
       selector:
         action: {}
-    brightness_up_long:
-      name: "Brightness Up – Long Press"
+    brightness_up_long_action:
+      name: "🔆 Brightness Up – Long Press"
       default: []
       selector:
         action: {}
 
     # ── BRIGHTNESS DOWN ──────────────────────────────────────
-    brightness_down_single:
-      name: "Brightness Down – Single Click"
+    brightness_down_single_action:
+      name: "🔅 Brightness Down – Single Click"
       default: []
       selector:
         action: {}
-    brightness_down_double:
-      name: "Brightness Down – Double Click"
+    brightness_down_double_action:
+      name: "🔅 Brightness Down – Double Click"
       default: []
       selector:
         action: {}
-    brightness_down_long:
-      name: "Brightness Down – Long Press"
+    brightness_down_long_action:
+      name: "🔅 Brightness Down – Long Press"
       default: []
       selector:
         action: {}
 
     # ── SHORTCUT 1 ───────────────────────────────────────────
-    shortcut_1_single:
-      name: "Shortcut 1 – Single Click"
+    shortcut_1_single_action:
+      name: "1️⃣ Shortcut 1 – Single Click"
       default: []
       selector:
         action: {}
-    shortcut_1_double:
-      name: "Shortcut 1 – Double Click"
+    shortcut_1_double_action:
+      name: "1️⃣ Shortcut 1 – Double Click"
       default: []
       selector:
         action: {}
-    shortcut_1_long:
-      name: "Shortcut 1 – Long Press"
+    shortcut_1_long_action:
+      name: "1️⃣ Shortcut 1 – Long Press"
       default: []
       selector:
         action: {}
 
     # ── SHORTCUT 2 ───────────────────────────────────────────
-    shortcut_2_single:
-      name: "Shortcut 2 – Single Click"
+    shortcut_2_single_action:
+      name: "2️⃣ Shortcut 2 – Single Click"
       default: []
       selector:
         action: {}
-    shortcut_2_double:
-      name: "Shortcut 2 – Double Click"
+    shortcut_2_double_action:
+      name: "2️⃣ Shortcut 2 – Double Click"
       default: []
       selector:
         action: {}
-    shortcut_2_long:
-      name: "Shortcut 2 – Long Press"
+    shortcut_2_long_action:
+      name: "2️⃣ Shortcut 2 – Long Press"
       default: []
       selector:
         action: {}
 
     # ── SHORTCUT 3 ───────────────────────────────────────────
-    shortcut_3_single:
-      name: "Shortcut 3 – Single Click"
+    shortcut_3_single_action:
+      name: "3️⃣ Shortcut 3 – Single Click"
       default: []
       selector:
         action: {}
-    shortcut_3_double:
-      name: "Shortcut 3 – Double Click"
+    shortcut_3_double_action:
+      name: "3️⃣ Shortcut 3 – Double Click"
       default: []
       selector:
         action: {}
-    shortcut_3_long:
-      name: "Shortcut 3 – Long Press"
+    shortcut_3_long_action:
+      name: "3️⃣ Shortcut 3 – Long Press"
       default: []
       selector:
         action: {}
 
     # ── SHORTCUT 4 ───────────────────────────────────────────
-    shortcut_4_single:
-      name: "Shortcut 4 – Single Click"
+    shortcut_4_single_action:
+      name: "4️⃣ Shortcut 4 – Single Click"
       default: []
       selector:
         action: {}
-    shortcut_4_double:
-      name: "Shortcut 4 – Double Click"
+    shortcut_4_double_action:
+      name: "4️⃣ Shortcut 4 – Double Click"
       default: []
       selector:
         action: {}
-    shortcut_4_long:
-      name: "Shortcut 4 – Long Press"
+    shortcut_4_long_action:
+      name: "4️⃣ Shortcut 4 – Long Press"
       default: []
       selector:
         action: {}
 
 # ==============================================================
-# TRIGGER & ACTIONS
+# VARIABLEN
+# ==============================================================
+variables:
+  device_name: !input device_name
+
+# ==============================================================
+# EIN EINZIGER TRIGGER – Gerät wird per Condition gefiltert
 # ==============================================================
 triggers:
-  - trigger: state
-    entity_id:
-      - !input power_single
-    to: "on"
-    id: power_single
-  - trigger: state
-    entity_id:
-      - !input back_single
-    to: "on"
-    id: back_single
-  - trigger: state
-    entity_id:
-      - !input back_double
-    to: "on"
-    id: back_double
-  - trigger: state
-    entity_id:
-      - !input back_long
-    to: "on"
-    id: back_long
-  - trigger: state
-    entity_id:
-      - !input home_single
-    to: "on"
-    id: home_single
-  - trigger: state
-    entity_id:
-      - !input home_double
-    to: "on"
-    id: home_double
-  - trigger: state
-    entity_id:
-      - !input home_long
-    to: "on"
-    id: home_long
-  - trigger: state
-    entity_id:
-      - !input play_pause_single
-    to: "on"
-    id: play_pause_single
-  - trigger: state
-    entity_id:
-      - !input play_pause_double
-    to: "on"
-    id: play_pause_double
-  - trigger: state
-    entity_id:
-      - !input play_pause_long
-    to: "on"
-    id: play_pause_long
-  - trigger: state
-    entity_id:
-      - !input up_single
-    to: "on"
-    id: up_single
-  - trigger: state
-    entity_id:
-      - !input up_double
-    to: "on"
-    id: up_double
-  - trigger: state
-    entity_id:
-      - !input up_long
-    to: "on"
-    id: up_long
-  - trigger: state
-    entity_id:
-      - !input down_single
-    to: "on"
-    id: down_single
-  - trigger: state
-    entity_id:
-      - !input down_double
-    to: "on"
-    id: down_double
-  - trigger: state
-    entity_id:
-      - !input down_long
-    to: "on"
-    id: down_long
-  - trigger: state
-    entity_id:
-      - !input left_single
-    to: "on"
-    id: left_single
-  - trigger: state
-    entity_id:
-      - !input left_double
-    to: "on"
-    id: left_double
-  - trigger: state
-    entity_id:
-      - !input left_long
-    to: "on"
-    id: left_long
-  - trigger: state
-    entity_id:
-      - !input right_single
-    to: "on"
-    id: right_single
-  - trigger: state
-    entity_id:
-      - !input right_double
-    to: "on"
-    id: right_double
-  - trigger: state
-    entity_id:
-      - !input right_long
-    to: "on"
-    id: right_long
-  - trigger: state
-    entity_id:
-      - !input select_single
-    to: "on"
-    id: select_single
-  - trigger: state
-    entity_id:
-      - !input select_double
-    to: "on"
-    id: select_double
-  - trigger: state
-    entity_id:
-      - !input select_long
-    to: "on"
-    id: select_long
-  - trigger: state
-    entity_id:
-      - !input volume_up_single
-    to: "on"
-    id: volume_up_single
-  - trigger: state
-    entity_id:
-      - !input volume_up_double
-    to: "on"
-    id: volume_up_double
-  - trigger: state
-    entity_id:
-      - !input volume_up_long
-    to: "on"
-    id: volume_up_long
-  - trigger: state
-    entity_id:
-      - !input volume_down_single
-    to: "on"
-    id: volume_down_single
-  - trigger: state
-    entity_id:
-      - !input volume_down_double
-    to: "on"
-    id: volume_down_double
-  - trigger: state
-    entity_id:
-      - !input volume_down_long
-    to: "on"
-    id: volume_down_long
-  - trigger: state
-    entity_id:
-      - !input mute_single
-    to: "on"
-    id: mute_single
-  - trigger: state
-    entity_id:
-      - !input mute_double
-    to: "on"
-    id: mute_double
-  - trigger: state
-    entity_id:
-      - !input mute_long
-    to: "on"
-    id: mute_long
-  - trigger: state
-    entity_id:
-      - !input channel_up_single
-    to: "on"
-    id: channel_up_single
-  - trigger: state
-    entity_id:
-      - !input channel_up_double
-    to: "on"
-    id: channel_up_double
-  - trigger: state
-    entity_id:
-      - !input channel_up_long
-    to: "on"
-    id: channel_up_long
-  - trigger: state
-    entity_id:
-      - !input channel_down_single
-    to: "on"
-    id: channel_down_single
-  - trigger: state
-    entity_id:
-      - !input channel_down_double
-    to: "on"
-    id: channel_down_double
-  - trigger: state
-    entity_id:
-      - !input channel_down_long
-    to: "on"
-    id: channel_down_long
-  - trigger: state
-    entity_id:
-      - !input settings_single
-    to: "on"
-    id: settings_single
-  - trigger: state
-    entity_id:
-      - !input settings_double
-    to: "on"
-    id: settings_double
-  - trigger: state
-    entity_id:
-      - !input settings_long
-    to: "on"
-    id: settings_long
-  - trigger: state
-    entity_id:
-      - !input brightness_up_single
-    to: "on"
-    id: brightness_up_single
-  - trigger: state
-    entity_id:
-      - !input brightness_up_double
-    to: "on"
-    id: brightness_up_double
-  - trigger: state
-    entity_id:
-      - !input brightness_up_long
-    to: "on"
-    id: brightness_up_long
-  - trigger: state
-    entity_id:
-      - !input brightness_down_single
-    to: "on"
-    id: brightness_down_single
-  - trigger: state
-    entity_id:
-      - !input brightness_down_double
-    to: "on"
-    id: brightness_down_double
-  - trigger: state
-    entity_id:
-      - !input brightness_down_long
-    to: "on"
-    id: brightness_down_long
-  - trigger: state
-    entity_id:
-      - !input shortcut_1_single
-    to: "on"
-    id: shortcut_1_single
-  - trigger: state
-    entity_id:
-      - !input shortcut_1_double
-    to: "on"
-    id: shortcut_1_double
-  - trigger: state
-    entity_id:
-      - !input shortcut_1_long
-    to: "on"
-    id: shortcut_1_long
-  - trigger: state
-    entity_id:
-      - !input shortcut_2_single
-    to: "on"
-    id: shortcut_2_single
-  - trigger: state
-    entity_id:
-      - !input shortcut_2_double
-    to: "on"
-    id: shortcut_2_double
-  - trigger: state
-    entity_id:
-      - !input shortcut_2_long
-    to: "on"
-    id: shortcut_2_long
-  - trigger: state
-    entity_id:
-      - !input shortcut_3_single
-    to: "on"
-    id: shortcut_3_single
-  - trigger: state
-    entity_id:
-      - !input shortcut_3_double
-    to: "on"
-    id: shortcut_3_double
-  - trigger: state
-    entity_id:
-      - !input shortcut_3_long
-    to: "on"
-    id: shortcut_3_long
-  - trigger: state
-    entity_id:
-      - !input shortcut_4_single
-    to: "on"
-    id: shortcut_4_single
-  - trigger: state
-    entity_id:
-      - !input shortcut_4_double
-    to: "on"
-    id: shortcut_4_double
-  - trigger: state
-    entity_id:
-      - !input shortcut_4_long
-    to: "on"
-    id: shortcut_4_long
+  - trigger: event
+    event_type: esphome.remote_button_pressed
 
-conditions: []
+conditions:
+  - condition: template
+    value_template: "{{ trigger.event.data.device == device_name }}"
 
+# ==============================================================
+# ACTIONS
+# ==============================================================
 actions:
   - choose:
       - conditions:
-          - condition: trigger
-            id: power_single
-        sequence: !input power_single
+          - condition: template
+            value_template: "{{ trigger.event.data.button == 'back' and trigger.event.data.type == 'single' }}"
+        sequence: !input back_single_action
       - conditions:
-          - condition: trigger
-            id: back_single
-        sequence: !input back_single
+          - condition: template
+            value_template: "{{ trigger.event.data.button == 'back' and trigger.event.data.type == 'double' }}"
+        sequence: !input back_double_action
       - conditions:
-          - condition: trigger
-            id: back_double
-        sequence: !input back_double
+          - condition: template
+            value_template: "{{ trigger.event.data.button == 'back' and trigger.event.data.type == 'long' }}"
+        sequence: !input back_long_action
+
       - conditions:
-          - condition: trigger
-            id: back_long
-        sequence: !input back_long
+          - condition: template
+            value_template: "{{ trigger.event.data.button == 'home' and trigger.event.data.type == 'single' }}"
+        sequence: !input home_single_action
       - conditions:
-          - condition: trigger
-            id: home_single
-        sequence: !input home_single
+          - condition: template
+            value_template: "{{ trigger.event.data.button == 'home' and trigger.event.data.type == 'double' }}"
+        sequence: !input home_double_action
       - conditions:
-          - condition: trigger
-            id: home_double
-        sequence: !input home_double
+          - condition: template
+            value_template: "{{ trigger.event.data.button == 'home' and trigger.event.data.type == 'long' }}"
+        sequence: !input home_long_action
+
       - conditions:
-          - condition: trigger
-            id: home_long
-        sequence: !input home_long
+          - condition: template
+            value_template: "{{ trigger.event.data.button == 'play_pause' and trigger.event.data.type == 'single' }}"
+        sequence: !input play_pause_single_action
       - conditions:
-          - condition: trigger
-            id: play_pause_single
-        sequence: !input play_pause_single
+          - condition: template
+            value_template: "{{ trigger.event.data.button == 'play_pause' and trigger.event.data.type == 'double' }}"
+        sequence: !input play_pause_double_action
       - conditions:
-          - condition: trigger
-            id: play_pause_double
-        sequence: !input play_pause_double
+          - condition: template
+            value_template: "{{ trigger.event.data.button == 'play_pause' and trigger.event.data.type == 'long' }}"
+        sequence: !input play_pause_long_action
+
       - conditions:
-          - condition: trigger
-            id: play_pause_long
-        sequence: !input play_pause_long
+          - condition: template
+            value_template: "{{ trigger.event.data.button == 'up' and trigger.event.data.type == 'single' }}"
+        sequence: !input up_single_action
       - conditions:
-          - condition: trigger
-            id: up_single
-        sequence: !input up_single
+          - condition: template
+            value_template: "{{ trigger.event.data.button == 'up' and trigger.event.data.type == 'double' }}"
+        sequence: !input up_double_action
       - conditions:
-          - condition: trigger
-            id: up_double
-        sequence: !input up_double
+          - condition: template
+            value_template: "{{ trigger.event.data.button == 'up' and trigger.event.data.type == 'long' }}"
+        sequence: !input up_long_action
+
       - conditions:
-          - condition: trigger
-            id: up_long
-        sequence: !input up_long
+          - condition: template
+            value_template: "{{ trigger.event.data.button == 'down' and trigger.event.data.type == 'single' }}"
+        sequence: !input down_single_action
       - conditions:
-          - condition: trigger
-            id: down_single
-        sequence: !input down_single
+          - condition: template
+            value_template: "{{ trigger.event.data.button == 'down' and trigger.event.data.type == 'double' }}"
+        sequence: !input down_double_action
       - conditions:
-          - condition: trigger
-            id: down_double
-        sequence: !input down_double
+          - condition: template
+            value_template: "{{ trigger.event.data.button == 'down' and trigger.event.data.type == 'long' }}"
+        sequence: !input down_long_action
+
       - conditions:
-          - condition: trigger
-            id: down_long
-        sequence: !input down_long
+          - condition: template
+            value_template: "{{ trigger.event.data.button == 'left' and trigger.event.data.type == 'single' }}"
+        sequence: !input left_single_action
       - conditions:
-          - condition: trigger
-            id: left_single
-        sequence: !input left_single
+          - condition: template
+            value_template: "{{ trigger.event.data.button == 'left' and trigger.event.data.type == 'double' }}"
+        sequence: !input left_double_action
       - conditions:
-          - condition: trigger
-            id: left_double
-        sequence: !input left_double
+          - condition: template
+            value_template: "{{ trigger.event.data.button == 'left' and trigger.event.data.type == 'long' }}"
+        sequence: !input left_long_action
+
       - conditions:
-          - condition: trigger
-            id: left_long
-        sequence: !input left_long
+          - condition: template
+            value_template: "{{ trigger.event.data.button == 'right' and trigger.event.data.type == 'single' }}"
+        sequence: !input right_single_action
       - conditions:
-          - condition: trigger
-            id: right_single
-        sequence: !input right_single
+          - condition: template
+            value_template: "{{ trigger.event.data.button == 'right' and trigger.event.data.type == 'double' }}"
+        sequence: !input right_double_action
       - conditions:
-          - condition: trigger
-            id: right_double
-        sequence: !input right_double
+          - condition: template
+            value_template: "{{ trigger.event.data.button == 'right' and trigger.event.data.type == 'long' }}"
+        sequence: !input right_long_action
+
       - conditions:
-          - condition: trigger
-            id: right_long
-        sequence: !input right_long
+          - condition: template
+            value_template: "{{ trigger.event.data.button == 'select' and trigger.event.data.type == 'single' }}"
+        sequence: !input select_single_action
       - conditions:
-          - condition: trigger
-            id: select_single
-        sequence: !input select_single
+          - condition: template
+            value_template: "{{ trigger.event.data.button == 'select' and trigger.event.data.type == 'double' }}"
+        sequence: !input select_double_action
       - conditions:
-          - condition: trigger
-            id: select_double
-        sequence: !input select_double
+          - condition: template
+            value_template: "{{ trigger.event.data.button == 'select' and trigger.event.data.type == 'long' }}"
+        sequence: !input select_long_action
+
       - conditions:
-          - condition: trigger
-            id: select_long
-        sequence: !input select_long
+          - condition: template
+            value_template: "{{ trigger.event.data.button == 'volume_up' and trigger.event.data.type == 'single' }}"
+        sequence: !input volume_up_single_action
       - conditions:
-          - condition: trigger
-            id: volume_up_single
-        sequence: !input volume_up_single
+          - condition: template
+            value_template: "{{ trigger.event.data.button == 'volume_up' and trigger.event.data.type == 'double' }}"
+        sequence: !input volume_up_double_action
       - conditions:
-          - condition: trigger
-            id: volume_up_double
-        sequence: !input volume_up_double
+          - condition: template
+            value_template: "{{ trigger.event.data.button == 'volume_up' and trigger.event.data.type == 'long' }}"
+        sequence: !input volume_up_long_action
+
       - conditions:
-          - condition: trigger
-            id: volume_up_long
-        sequence: !input volume_up_long
+          - condition: template
+            value_template: "{{ trigger.event.data.button == 'volume_down' and trigger.event.data.type == 'single' }}"
+        sequence: !input volume_down_single_action
       - conditions:
-          - condition: trigger
-            id: volume_down_single
-        sequence: !input volume_down_single
+          - condition: template
+            value_template: "{{ trigger.event.data.button == 'volume_down' and trigger.event.data.type == 'double' }}"
+        sequence: !input volume_down_double_action
       - conditions:
-          - condition: trigger
-            id: volume_down_double
-        sequence: !input volume_down_double
+          - condition: template
+            value_template: "{{ trigger.event.data.button == 'volume_down' and trigger.event.data.type == 'long' }}"
+        sequence: !input volume_down_long_action
+
       - conditions:
-          - condition: trigger
-            id: volume_down_long
-        sequence: !input volume_down_long
+          - condition: template
+            value_template: "{{ trigger.event.data.button == 'mute' and trigger.event.data.type == 'single' }}"
+        sequence: !input mute_single_action
       - conditions:
-          - condition: trigger
-            id: mute_single
-        sequence: !input mute_single
+          - condition: template
+            value_template: "{{ trigger.event.data.button == 'mute' and trigger.event.data.type == 'double' }}"
+        sequence: !input mute_double_action
       - conditions:
-          - condition: trigger
-            id: mute_double
-        sequence: !input mute_double
+          - condition: template
+            value_template: "{{ trigger.event.data.button == 'mute' and trigger.event.data.type == 'long' }}"
+        sequence: !input mute_long_action
+
       - conditions:
-          - condition: trigger
-            id: mute_long
-        sequence: !input mute_long
+          - condition: template
+            value_template: "{{ trigger.event.data.button == 'channel_up' and trigger.event.data.type == 'single' }}"
+        sequence: !input channel_up_single_action
       - conditions:
-          - condition: trigger
-            id: channel_up_single
-        sequence: !input channel_up_single
+          - condition: template
+            value_template: "{{ trigger.event.data.button == 'channel_up' and trigger.event.data.type == 'double' }}"
+        sequence: !input channel_up_double_action
       - conditions:
-          - condition: trigger
-            id: channel_up_double
-        sequence: !input channel_up_double
+          - condition: template
+            value_template: "{{ trigger.event.data.button == 'channel_up' and trigger.event.data.type == 'long' }}"
+        sequence: !input channel_up_long_action
+
       - conditions:
-          - condition: trigger
-            id: channel_up_long
-        sequence: !input channel_up_long
+          - condition: template
+            value_template: "{{ trigger.event.data.button == 'channel_down' and trigger.event.data.type == 'single' }}"
+        sequence: !input channel_down_single_action
       - conditions:
-          - condition: trigger
-            id: channel_down_single
-        sequence: !input channel_down_single
+          - condition: template
+            value_template: "{{ trigger.event.data.button == 'channel_down' and trigger.event.data.type == 'double' }}"
+        sequence: !input channel_down_double_action
       - conditions:
-          - condition: trigger
-            id: channel_down_double
-        sequence: !input channel_down_double
+          - condition: template
+            value_template: "{{ trigger.event.data.button == 'channel_down' and trigger.event.data.type == 'long' }}"
+        sequence: !input channel_down_long_action
+
       - conditions:
-          - condition: trigger
-            id: channel_down_long
-        sequence: !input channel_down_long
+          - condition: template
+            value_template: "{{ trigger.event.data.button == 'settings' and trigger.event.data.type == 'single' }}"
+        sequence: !input settings_single_action
       - conditions:
-          - condition: trigger
-            id: settings_single
-        sequence: !input settings_single
+          - condition: template
+            value_template: "{{ trigger.event.data.button == 'settings' and trigger.event.data.type == 'double' }}"
+        sequence: !input settings_double_action
       - conditions:
-          - condition: trigger
-            id: settings_double
-        sequence: !input settings_double
+          - condition: template
+            value_template: "{{ trigger.event.data.button == 'settings' and trigger.event.data.type == 'long' }}"
+        sequence: !input settings_long_action
+
       - conditions:
-          - condition: trigger
-            id: settings_long
-        sequence: !input settings_long
+          - condition: template
+            value_template: "{{ trigger.event.data.button == 'brightness_up' and trigger.event.data.type == 'single' }}"
+        sequence: !input brightness_up_single_action
       - conditions:
-          - condition: trigger
-            id: brightness_up_single
-        sequence: !input brightness_up_single
+          - condition: template
+            value_template: "{{ trigger.event.data.button == 'brightness_up' and trigger.event.data.type == 'double' }}"
+        sequence: !input brightness_up_double_action
       - conditions:
-          - condition: trigger
-            id: brightness_up_double
-        sequence: !input brightness_up_double
+          - condition: template
+            value_template: "{{ trigger.event.data.button == 'brightness_up' and trigger.event.data.type == 'long' }}"
+        sequence: !input brightness_up_long_action
+
       - conditions:
-          - condition: trigger
-            id: brightness_up_long
-        sequence: !input brightness_up_long
+          - condition: template
+            value_template: "{{ trigger.event.data.button == 'brightness_down' and trigger.event.data.type == 'single' }}"
+        sequence: !input brightness_down_single_action
       - conditions:
-          - condition: trigger
-            id: brightness_down_single
-        sequence: !input brightness_down_single
+          - condition: template
+            value_template: "{{ trigger.event.data.button == 'brightness_down' and trigger.event.data.type == 'double' }}"
+        sequence: !input brightness_down_double_action
       - conditions:
-          - condition: trigger
-            id: brightness_down_double
-        sequence: !input brightness_down_double
+          - condition: template
+            value_template: "{{ trigger.event.data.button == 'brightness_down' and trigger.event.data.type == 'long' }}"
+        sequence: !input brightness_down_long_action
+
       - conditions:
-          - condition: trigger
-            id: brightness_down_long
-        sequence: !input brightness_down_long
+          - condition: template
+            value_template: "{{ trigger.event.data.button == 'shortcut_1' and trigger.event.data.type == 'single' }}"
+        sequence: !input shortcut_1_single_action
       - conditions:
-          - condition: trigger
-            id: shortcut_1_single
-        sequence: !input shortcut_1_single
+          - condition: template
+            value_template: "{{ trigger.event.data.button == 'shortcut_1' and trigger.event.data.type == 'double' }}"
+        sequence: !input shortcut_1_double_action
       - conditions:
-          - condition: trigger
-            id: shortcut_1_double
-        sequence: !input shortcut_1_double
+          - condition: template
+            value_template: "{{ trigger.event.data.button == 'shortcut_1' and trigger.event.data.type == 'long' }}"
+        sequence: !input shortcut_1_long_action
+
       - conditions:
-          - condition: trigger
-            id: shortcut_1_long
-        sequence: !input shortcut_1_long
+          - condition: template
+            value_template: "{{ trigger.event.data.button == 'shortcut_2' and trigger.event.data.type == 'single' }}"
+        sequence: !input shortcut_2_single_action
       - conditions:
-          - condition: trigger
-            id: shortcut_2_single
-        sequence: !input shortcut_2_single
+          - condition: template
+            value_template: "{{ trigger.event.data.button == 'shortcut_2' and trigger.event.data.type == 'double' }}"
+        sequence: !input shortcut_2_double_action
       - conditions:
-          - condition: trigger
-            id: shortcut_2_double
-        sequence: !input shortcut_2_double
+          - condition: template
+            value_template: "{{ trigger.event.data.button == 'shortcut_2' and trigger.event.data.type == 'long' }}"
+        sequence: !input shortcut_2_long_action
+
       - conditions:
-          - condition: trigger
-            id: shortcut_2_long
-        sequence: !input shortcut_2_long
+          - condition: template
+            value_template: "{{ trigger.event.data.button == 'shortcut_3' and trigger.event.data.type == 'single' }}"
+        sequence: !input shortcut_3_single_action
       - conditions:
-          - condition: trigger
-            id: shortcut_3_single
-        sequence: !input shortcut_3_single
+          - condition: template
+            value_template: "{{ trigger.event.data.button == 'shortcut_3' and trigger.event.data.type == 'double' }}"
+        sequence: !input shortcut_3_double_action
       - conditions:
-          - condition: trigger
-            id: shortcut_3_double
-        sequence: !input shortcut_3_double
+          - condition: template
+            value_template: "{{ trigger.event.data.button == 'shortcut_3' and trigger.event.data.type == 'long' }}"
+        sequence: !input shortcut_3_long_action
+
       - conditions:
-          - condition: trigger
-            id: shortcut_3_long
-        sequence: !input shortcut_3_long
+          - condition: template
+            value_template: "{{ trigger.event.data.button == 'shortcut_4' and trigger.event.data.type == 'single' }}"
+        sequence: !input shortcut_4_single_action
       - conditions:
-          - condition: trigger
-            id: shortcut_4_single
-        sequence: !input shortcut_4_single
+          - condition: template
+            value_template: "{{ trigger.event.data.button == 'shortcut_4' and trigger.event.data.type == 'double' }}"
+        sequence: !input shortcut_4_double_action
       - conditions:
-          - condition: trigger
-            id: shortcut_4_double
-        sequence: !input shortcut_4_double
-      - conditions:
-          - condition: trigger
-            id: shortcut_4_long
-        sequence: !input shortcut_4_long
+          - condition: template
+            value_template: "{{ trigger.event.data.button == 'shortcut_4' and trigger.event.data.type == 'long' }}"
+        sequence: !input shortcut_4_long_action
 
 mode: queued
 max: 10
