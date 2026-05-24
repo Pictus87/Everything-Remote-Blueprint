@@ -1,20 +1,20 @@
+substitutions:
+  device_name: everything-remote
+
 esphome:
   name: everything-remote
-  friendly_name: Everything Remote
+  friendly_name: Everything-Remote
   on_boot:
     - priority: 250
       then:
         - lambda: |-
             id(last_active) = millis() / 1000;
-            id(wake_button_processed) = false;
 
             auto cause = esp_sleep_get_wakeup_cause();
             if (cause == ESP_SLEEP_WAKEUP_EXT0) {
-              ESP_LOGI("main", "Device woke up by EXT0");
-            } else if (cause == ESP_SLEEP_WAKEUP_TIMER) {
-              ESP_LOGD("main", "Device woke up by timer.");
+              ESP_LOGI("main", "Device woke up by EXT0 (Power Button)");
             } else {
-              ESP_LOGD("main", "Device woke up by other cause: %d", cause);
+              ESP_LOGD("main", "Device woke up, cause: %d", cause);
             }
 
 esp32:
@@ -40,10 +40,6 @@ globals:
     type: int
     restore_value: no
     initial_value: '0'
-  - id: wake_button_processed
-    type: bool
-    restore_value: no
-    initial_value: 'false'
 
 script:
   - id: reset_idle_timer
@@ -53,18 +49,18 @@ script:
 
 deep_sleep:
   id: deep_sleep_ctrl
-  sleep_duration: 2800 min
+  sleep_duration: 2800min
   wakeup_pin:
     number: GPIO0
     inverted: true
     allow_other_uses: true
 
 interval:
-  - interval: 60s
+  - interval: 30s
     then:
       - if:
           condition:
-            lambda: return (millis() / 1000) - id(last_active) >= 1200;
+            lambda: return (millis() / 1000) - id(last_active) >= 600;
           then:
             - deep_sleep.enter: deep_sleep_ctrl
 
@@ -75,7 +71,7 @@ interval:
 
 binary_sensor:
 
-  # ── POWER (GPIO0 – kein double click wegen wake-up) ────────
+  # ── POWER (GPIO0 – nur Wake-up) ───────────────────────────
   - platform: gpio
     pin:
       number: GPIO0
@@ -85,20 +81,6 @@ binary_sensor:
     name: "Power"
     id: power
     internal: true
-    on_press:
-      then:
-        - script.execute: reset_idle_timer
-        - binary_sensor.template.publish:
-            id: power_single
-            state: ON
-        - delay: 200ms
-        - binary_sensor.template.publish:
-            id: power_single
-            state: OFF
-
-  - platform: template
-    name: "Power Single"
-    id: power_single
 
   # ── BACK (GPIO2) ───────────────────────────────────────────
   - platform: gpio
@@ -115,6 +97,12 @@ binary_sensor:
           - OFF for at least 350ms
         then:
           - script.execute: reset_idle_timer
+          - homeassistant.event:
+              event: esphome.remote_button_pressed
+              data:
+                button: "back"
+                type: "single"
+                device: "${device_name}"
           - binary_sensor.template.publish:
               id: back_single
               state: ON
@@ -129,6 +117,12 @@ binary_sensor:
           - OFF for at least 200ms
         then:
           - script.execute: reset_idle_timer
+          - homeassistant.event:
+              event: esphome.remote_button_pressed
+              data:
+                button: "back"
+                type: "double"
+                device: "${device_name}"
           - binary_sensor.template.publish:
               id: back_double
               state: ON
@@ -140,6 +134,12 @@ binary_sensor:
           - ON for at least 500ms
         then:
           - script.execute: reset_idle_timer
+          - homeassistant.event:
+              event: esphome.remote_button_pressed
+              data:
+                button: "back"
+                type: "long"
+                device: "${device_name}"
           - binary_sensor.template.publish:
               id: back_long
               state: ON
@@ -173,6 +173,12 @@ binary_sensor:
           - OFF for at least 350ms
         then:
           - script.execute: reset_idle_timer
+          - homeassistant.event:
+              event: esphome.remote_button_pressed
+              data:
+                button: "home"
+                type: "single"
+                device: "${device_name}"
           - binary_sensor.template.publish:
               id: home_single
               state: ON
@@ -187,6 +193,12 @@ binary_sensor:
           - OFF for at least 200ms
         then:
           - script.execute: reset_idle_timer
+          - homeassistant.event:
+              event: esphome.remote_button_pressed
+              data:
+                button: "home"
+                type: "double"
+                device: "${device_name}"
           - binary_sensor.template.publish:
               id: home_double
               state: ON
@@ -198,6 +210,12 @@ binary_sensor:
           - ON for at least 500ms
         then:
           - script.execute: reset_idle_timer
+          - homeassistant.event:
+              event: esphome.remote_button_pressed
+              data:
+                button: "home"
+                type: "long"
+                device: "${device_name}"
           - binary_sensor.template.publish:
               id: home_long
               state: ON
@@ -231,6 +249,12 @@ binary_sensor:
           - OFF for at least 350ms
         then:
           - script.execute: reset_idle_timer
+          - homeassistant.event:
+              event: esphome.remote_button_pressed
+              data:
+                button: "play_pause"
+                type: "single"
+                device: "${device_name}"
           - binary_sensor.template.publish:
               id: play_pause_single
               state: ON
@@ -245,6 +269,12 @@ binary_sensor:
           - OFF for at least 200ms
         then:
           - script.execute: reset_idle_timer
+          - homeassistant.event:
+              event: esphome.remote_button_pressed
+              data:
+                button: "play_pause"
+                type: "double"
+                device: "${device_name}"
           - binary_sensor.template.publish:
               id: play_pause_double
               state: ON
@@ -256,6 +286,12 @@ binary_sensor:
           - ON for at least 500ms
         then:
           - script.execute: reset_idle_timer
+          - homeassistant.event:
+              event: esphome.remote_button_pressed
+              data:
+                button: "play_pause"
+                type: "long"
+                device: "${device_name}"
           - binary_sensor.template.publish:
               id: play_pause_long
               state: ON
@@ -289,6 +325,12 @@ binary_sensor:
           - OFF for at least 350ms
         then:
           - script.execute: reset_idle_timer
+          - homeassistant.event:
+              event: esphome.remote_button_pressed
+              data:
+                button: "up"
+                type: "single"
+                device: "${device_name}"
           - binary_sensor.template.publish:
               id: up_single
               state: ON
@@ -303,6 +345,12 @@ binary_sensor:
           - OFF for at least 200ms
         then:
           - script.execute: reset_idle_timer
+          - homeassistant.event:
+              event: esphome.remote_button_pressed
+              data:
+                button: "up"
+                type: "double"
+                device: "${device_name}"
           - binary_sensor.template.publish:
               id: up_double
               state: ON
@@ -314,6 +362,12 @@ binary_sensor:
           - ON for at least 500ms
         then:
           - script.execute: reset_idle_timer
+          - homeassistant.event:
+              event: esphome.remote_button_pressed
+              data:
+                button: "up"
+                type: "long"
+                device: "${device_name}"
           - binary_sensor.template.publish:
               id: up_long
               state: ON
@@ -347,6 +401,12 @@ binary_sensor:
           - OFF for at least 350ms
         then:
           - script.execute: reset_idle_timer
+          - homeassistant.event:
+              event: esphome.remote_button_pressed
+              data:
+                button: "left"
+                type: "single"
+                device: "${device_name}"
           - binary_sensor.template.publish:
               id: left_single
               state: ON
@@ -361,6 +421,12 @@ binary_sensor:
           - OFF for at least 200ms
         then:
           - script.execute: reset_idle_timer
+          - homeassistant.event:
+              event: esphome.remote_button_pressed
+              data:
+                button: "left"
+                type: "double"
+                device: "${device_name}"
           - binary_sensor.template.publish:
               id: left_double
               state: ON
@@ -372,6 +438,12 @@ binary_sensor:
           - ON for at least 500ms
         then:
           - script.execute: reset_idle_timer
+          - homeassistant.event:
+              event: esphome.remote_button_pressed
+              data:
+                button: "left"
+                type: "long"
+                device: "${device_name}"
           - binary_sensor.template.publish:
               id: left_long
               state: ON
@@ -405,6 +477,12 @@ binary_sensor:
           - OFF for at least 350ms
         then:
           - script.execute: reset_idle_timer
+          - homeassistant.event:
+              event: esphome.remote_button_pressed
+              data:
+                button: "select"
+                type: "single"
+                device: "${device_name}"
           - binary_sensor.template.publish:
               id: select_single
               state: ON
@@ -419,6 +497,12 @@ binary_sensor:
           - OFF for at least 200ms
         then:
           - script.execute: reset_idle_timer
+          - homeassistant.event:
+              event: esphome.remote_button_pressed
+              data:
+                button: "select"
+                type: "double"
+                device: "${device_name}"
           - binary_sensor.template.publish:
               id: select_double
               state: ON
@@ -430,6 +514,12 @@ binary_sensor:
           - ON for at least 500ms
         then:
           - script.execute: reset_idle_timer
+          - homeassistant.event:
+              event: esphome.remote_button_pressed
+              data:
+                button: "select"
+                type: "long"
+                device: "${device_name}"
           - binary_sensor.template.publish:
               id: select_long
               state: ON
@@ -463,6 +553,12 @@ binary_sensor:
           - OFF for at least 350ms
         then:
           - script.execute: reset_idle_timer
+          - homeassistant.event:
+              event: esphome.remote_button_pressed
+              data:
+                button: "right"
+                type: "single"
+                device: "${device_name}"
           - binary_sensor.template.publish:
               id: right_single
               state: ON
@@ -477,6 +573,12 @@ binary_sensor:
           - OFF for at least 200ms
         then:
           - script.execute: reset_idle_timer
+          - homeassistant.event:
+              event: esphome.remote_button_pressed
+              data:
+                button: "right"
+                type: "double"
+                device: "${device_name}"
           - binary_sensor.template.publish:
               id: right_double
               state: ON
@@ -488,6 +590,12 @@ binary_sensor:
           - ON for at least 500ms
         then:
           - script.execute: reset_idle_timer
+          - homeassistant.event:
+              event: esphome.remote_button_pressed
+              data:
+                button: "right"
+                type: "long"
+                device: "${device_name}"
           - binary_sensor.template.publish:
               id: right_long
               state: ON
@@ -521,6 +629,12 @@ binary_sensor:
           - OFF for at least 350ms
         then:
           - script.execute: reset_idle_timer
+          - homeassistant.event:
+              event: esphome.remote_button_pressed
+              data:
+                button: "down"
+                type: "single"
+                device: "${device_name}"
           - binary_sensor.template.publish:
               id: down_single
               state: ON
@@ -535,6 +649,12 @@ binary_sensor:
           - OFF for at least 200ms
         then:
           - script.execute: reset_idle_timer
+          - homeassistant.event:
+              event: esphome.remote_button_pressed
+              data:
+                button: "down"
+                type: "double"
+                device: "${device_name}"
           - binary_sensor.template.publish:
               id: down_double
               state: ON
@@ -546,6 +666,12 @@ binary_sensor:
           - ON for at least 500ms
         then:
           - script.execute: reset_idle_timer
+          - homeassistant.event:
+              event: esphome.remote_button_pressed
+              data:
+                button: "down"
+                type: "long"
+                device: "${device_name}"
           - binary_sensor.template.publish:
               id: down_long
               state: ON
@@ -579,6 +705,12 @@ binary_sensor:
           - OFF for at least 350ms
         then:
           - script.execute: reset_idle_timer
+          - homeassistant.event:
+              event: esphome.remote_button_pressed
+              data:
+                button: "volume_up"
+                type: "single"
+                device: "${device_name}"
           - binary_sensor.template.publish:
               id: volume_up_single
               state: ON
@@ -593,6 +725,12 @@ binary_sensor:
           - OFF for at least 200ms
         then:
           - script.execute: reset_idle_timer
+          - homeassistant.event:
+              event: esphome.remote_button_pressed
+              data:
+                button: "volume_up"
+                type: "double"
+                device: "${device_name}"
           - binary_sensor.template.publish:
               id: volume_up_double
               state: ON
@@ -604,6 +742,12 @@ binary_sensor:
           - ON for at least 500ms
         then:
           - script.execute: reset_idle_timer
+          - homeassistant.event:
+              event: esphome.remote_button_pressed
+              data:
+                button: "volume_up"
+                type: "long"
+                device: "${device_name}"
           - binary_sensor.template.publish:
               id: volume_up_long
               state: ON
@@ -637,6 +781,12 @@ binary_sensor:
           - OFF for at least 350ms
         then:
           - script.execute: reset_idle_timer
+          - homeassistant.event:
+              event: esphome.remote_button_pressed
+              data:
+                button: "mute"
+                type: "single"
+                device: "${device_name}"
           - binary_sensor.template.publish:
               id: mute_single
               state: ON
@@ -651,6 +801,12 @@ binary_sensor:
           - OFF for at least 200ms
         then:
           - script.execute: reset_idle_timer
+          - homeassistant.event:
+              event: esphome.remote_button_pressed
+              data:
+                button: "mute"
+                type: "double"
+                device: "${device_name}"
           - binary_sensor.template.publish:
               id: mute_double
               state: ON
@@ -662,6 +818,12 @@ binary_sensor:
           - ON for at least 500ms
         then:
           - script.execute: reset_idle_timer
+          - homeassistant.event:
+              event: esphome.remote_button_pressed
+              data:
+                button: "mute"
+                type: "long"
+                device: "${device_name}"
           - binary_sensor.template.publish:
               id: mute_long
               state: ON
@@ -695,6 +857,12 @@ binary_sensor:
           - OFF for at least 350ms
         then:
           - script.execute: reset_idle_timer
+          - homeassistant.event:
+              event: esphome.remote_button_pressed
+              data:
+                button: "channel_up"
+                type: "single"
+                device: "${device_name}"
           - binary_sensor.template.publish:
               id: channel_up_single
               state: ON
@@ -709,6 +877,12 @@ binary_sensor:
           - OFF for at least 200ms
         then:
           - script.execute: reset_idle_timer
+          - homeassistant.event:
+              event: esphome.remote_button_pressed
+              data:
+                button: "channel_up"
+                type: "double"
+                device: "${device_name}"
           - binary_sensor.template.publish:
               id: channel_up_double
               state: ON
@@ -720,6 +894,12 @@ binary_sensor:
           - ON for at least 500ms
         then:
           - script.execute: reset_idle_timer
+          - homeassistant.event:
+              event: esphome.remote_button_pressed
+              data:
+                button: "channel_up"
+                type: "long"
+                device: "${device_name}"
           - binary_sensor.template.publish:
               id: channel_up_long
               state: ON
@@ -753,6 +933,12 @@ binary_sensor:
           - OFF for at least 350ms
         then:
           - script.execute: reset_idle_timer
+          - homeassistant.event:
+              event: esphome.remote_button_pressed
+              data:
+                button: "volume_down"
+                type: "single"
+                device: "${device_name}"
           - binary_sensor.template.publish:
               id: volume_down_single
               state: ON
@@ -767,6 +953,12 @@ binary_sensor:
           - OFF for at least 200ms
         then:
           - script.execute: reset_idle_timer
+          - homeassistant.event:
+              event: esphome.remote_button_pressed
+              data:
+                button: "volume_down"
+                type: "double"
+                device: "${device_name}"
           - binary_sensor.template.publish:
               id: volume_down_double
               state: ON
@@ -778,6 +970,12 @@ binary_sensor:
           - ON for at least 500ms
         then:
           - script.execute: reset_idle_timer
+          - homeassistant.event:
+              event: esphome.remote_button_pressed
+              data:
+                button: "volume_down"
+                type: "long"
+                device: "${device_name}"
           - binary_sensor.template.publish:
               id: volume_down_long
               state: ON
@@ -811,6 +1009,12 @@ binary_sensor:
           - OFF for at least 350ms
         then:
           - script.execute: reset_idle_timer
+          - homeassistant.event:
+              event: esphome.remote_button_pressed
+              data:
+                button: "settings"
+                type: "single"
+                device: "${device_name}"
           - binary_sensor.template.publish:
               id: settings_single
               state: ON
@@ -825,6 +1029,12 @@ binary_sensor:
           - OFF for at least 200ms
         then:
           - script.execute: reset_idle_timer
+          - homeassistant.event:
+              event: esphome.remote_button_pressed
+              data:
+                button: "settings"
+                type: "double"
+                device: "${device_name}"
           - binary_sensor.template.publish:
               id: settings_double
               state: ON
@@ -836,6 +1046,12 @@ binary_sensor:
           - ON for at least 500ms
         then:
           - script.execute: reset_idle_timer
+          - homeassistant.event:
+              event: esphome.remote_button_pressed
+              data:
+                button: "settings"
+                type: "long"
+                device: "${device_name}"
           - binary_sensor.template.publish:
               id: settings_long
               state: ON
@@ -869,6 +1085,12 @@ binary_sensor:
           - OFF for at least 350ms
         then:
           - script.execute: reset_idle_timer
+          - homeassistant.event:
+              event: esphome.remote_button_pressed
+              data:
+                button: "channel_down"
+                type: "single"
+                device: "${device_name}"
           - binary_sensor.template.publish:
               id: channel_down_single
               state: ON
@@ -883,6 +1105,12 @@ binary_sensor:
           - OFF for at least 200ms
         then:
           - script.execute: reset_idle_timer
+          - homeassistant.event:
+              event: esphome.remote_button_pressed
+              data:
+                button: "channel_down"
+                type: "double"
+                device: "${device_name}"
           - binary_sensor.template.publish:
               id: channel_down_double
               state: ON
@@ -894,6 +1122,12 @@ binary_sensor:
           - ON for at least 500ms
         then:
           - script.execute: reset_idle_timer
+          - homeassistant.event:
+              event: esphome.remote_button_pressed
+              data:
+                button: "channel_down"
+                type: "long"
+                device: "${device_name}"
           - binary_sensor.template.publish:
               id: channel_down_long
               state: ON
@@ -927,6 +1161,12 @@ binary_sensor:
           - OFF for at least 350ms
         then:
           - script.execute: reset_idle_timer
+          - homeassistant.event:
+              event: esphome.remote_button_pressed
+              data:
+                button: "shortcut_1"
+                type: "single"
+                device: "${device_name}"
           - binary_sensor.template.publish:
               id: shortcut_1_single
               state: ON
@@ -941,6 +1181,12 @@ binary_sensor:
           - OFF for at least 200ms
         then:
           - script.execute: reset_idle_timer
+          - homeassistant.event:
+              event: esphome.remote_button_pressed
+              data:
+                button: "shortcut_1"
+                type: "double"
+                device: "${device_name}"
           - binary_sensor.template.publish:
               id: shortcut_1_double
               state: ON
@@ -952,6 +1198,12 @@ binary_sensor:
           - ON for at least 500ms
         then:
           - script.execute: reset_idle_timer
+          - homeassistant.event:
+              event: esphome.remote_button_pressed
+              data:
+                button: "shortcut_1"
+                type: "long"
+                device: "${device_name}"
           - binary_sensor.template.publish:
               id: shortcut_1_long
               state: ON
@@ -985,6 +1237,12 @@ binary_sensor:
           - OFF for at least 350ms
         then:
           - script.execute: reset_idle_timer
+          - homeassistant.event:
+              event: esphome.remote_button_pressed
+              data:
+                button: "shortcut_2"
+                type: "single"
+                device: "${device_name}"
           - binary_sensor.template.publish:
               id: shortcut_2_single
               state: ON
@@ -999,6 +1257,12 @@ binary_sensor:
           - OFF for at least 200ms
         then:
           - script.execute: reset_idle_timer
+          - homeassistant.event:
+              event: esphome.remote_button_pressed
+              data:
+                button: "shortcut_2"
+                type: "double"
+                device: "${device_name}"
           - binary_sensor.template.publish:
               id: shortcut_2_double
               state: ON
@@ -1010,6 +1274,12 @@ binary_sensor:
           - ON for at least 500ms
         then:
           - script.execute: reset_idle_timer
+          - homeassistant.event:
+              event: esphome.remote_button_pressed
+              data:
+                button: "shortcut_2"
+                type: "long"
+                device: "${device_name}"
           - binary_sensor.template.publish:
               id: shortcut_2_long
               state: ON
@@ -1043,6 +1313,12 @@ binary_sensor:
           - OFF for at least 350ms
         then:
           - script.execute: reset_idle_timer
+          - homeassistant.event:
+              event: esphome.remote_button_pressed
+              data:
+                button: "shortcut_3"
+                type: "single"
+                device: "${device_name}"
           - binary_sensor.template.publish:
               id: shortcut_3_single
               state: ON
@@ -1057,6 +1333,12 @@ binary_sensor:
           - OFF for at least 200ms
         then:
           - script.execute: reset_idle_timer
+          - homeassistant.event:
+              event: esphome.remote_button_pressed
+              data:
+                button: "shortcut_3"
+                type: "double"
+                device: "${device_name}"
           - binary_sensor.template.publish:
               id: shortcut_3_double
               state: ON
@@ -1068,6 +1350,12 @@ binary_sensor:
           - ON for at least 500ms
         then:
           - script.execute: reset_idle_timer
+          - homeassistant.event:
+              event: esphome.remote_button_pressed
+              data:
+                button: "shortcut_3"
+                type: "long"
+                device: "${device_name}"
           - binary_sensor.template.publish:
               id: shortcut_3_long
               state: ON
@@ -1101,6 +1389,12 @@ binary_sensor:
           - OFF for at least 350ms
         then:
           - script.execute: reset_idle_timer
+          - homeassistant.event:
+              event: esphome.remote_button_pressed
+              data:
+                button: "shortcut_4"
+                type: "single"
+                device: "${device_name}"
           - binary_sensor.template.publish:
               id: shortcut_4_single
               state: ON
@@ -1115,6 +1409,12 @@ binary_sensor:
           - OFF for at least 200ms
         then:
           - script.execute: reset_idle_timer
+          - homeassistant.event:
+              event: esphome.remote_button_pressed
+              data:
+                button: "shortcut_4"
+                type: "double"
+                device: "${device_name}"
           - binary_sensor.template.publish:
               id: shortcut_4_double
               state: ON
@@ -1126,6 +1426,12 @@ binary_sensor:
           - ON for at least 500ms
         then:
           - script.execute: reset_idle_timer
+          - homeassistant.event:
+              event: esphome.remote_button_pressed
+              data:
+                button: "shortcut_4"
+                type: "long"
+                device: "${device_name}"
           - binary_sensor.template.publish:
               id: shortcut_4_long
               state: ON
@@ -1159,6 +1465,12 @@ binary_sensor:
           - OFF for at least 350ms
         then:
           - script.execute: reset_idle_timer
+          - homeassistant.event:
+              event: esphome.remote_button_pressed
+              data:
+                button: "brightness_down"
+                type: "single"
+                device: "${device_name}"
           - binary_sensor.template.publish:
               id: brightness_down_single
               state: ON
@@ -1173,6 +1485,12 @@ binary_sensor:
           - OFF for at least 200ms
         then:
           - script.execute: reset_idle_timer
+          - homeassistant.event:
+              event: esphome.remote_button_pressed
+              data:
+                button: "brightness_down"
+                type: "double"
+                device: "${device_name}"
           - binary_sensor.template.publish:
               id: brightness_down_double
               state: ON
@@ -1184,6 +1502,12 @@ binary_sensor:
           - ON for at least 500ms
         then:
           - script.execute: reset_idle_timer
+          - homeassistant.event:
+              event: esphome.remote_button_pressed
+              data:
+                button: "brightness_down"
+                type: "long"
+                device: "${device_name}"
           - binary_sensor.template.publish:
               id: brightness_down_long
               state: ON
@@ -1217,6 +1541,12 @@ binary_sensor:
           - OFF for at least 350ms
         then:
           - script.execute: reset_idle_timer
+          - homeassistant.event:
+              event: esphome.remote_button_pressed
+              data:
+                button: "brightness_up"
+                type: "single"
+                device: "${device_name}"
           - binary_sensor.template.publish:
               id: brightness_up_single
               state: ON
@@ -1231,6 +1561,12 @@ binary_sensor:
           - OFF for at least 200ms
         then:
           - script.execute: reset_idle_timer
+          - homeassistant.event:
+              event: esphome.remote_button_pressed
+              data:
+                button: "brightness_up"
+                type: "double"
+                device: "${device_name}"
           - binary_sensor.template.publish:
               id: brightness_up_double
               state: ON
@@ -1242,6 +1578,12 @@ binary_sensor:
           - ON for at least 500ms
         then:
           - script.execute: reset_idle_timer
+          - homeassistant.event:
+              event: esphome.remote_button_pressed
+              data:
+                button: "brightness_up"
+                type: "long"
+                device: "${device_name}"
           - binary_sensor.template.publish:
               id: brightness_up_long
               state: ON
