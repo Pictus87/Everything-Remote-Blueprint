@@ -3,10 +3,10 @@ blueprint:
   description: >
     Automation for the Everything Remote (ESP32 ESPHome).
 
-    - Supports single, double and long press for all 20 buttons.
-    - All buttons are in the order from top left to bottom (see readme picture).
-    - Each button section is collapsible and has an optional name field for naming the main function.
-    - The power button wakes the device from deep sleep (no HA event).
+    - Supports single, double and long press for all 20 buttons.  
+    - All buttons are in the order from top left to bottom (see readme picture).  
+    - Each button section is collapsible and has an optional name field for naming the main function.  
+    - The power button wakes the device from deep sleep (no HA event).  
 
   domain: automation
   input:
