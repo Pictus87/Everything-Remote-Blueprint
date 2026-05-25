@@ -1,11 +1,11 @@
 blueprint:
   name: Everything Remote V1.3
-  description:  
+  description: >
     Automation for the Everything Remote (ESP32 ESPHome).
-    
+
     - Supports single, double and long press for all 20 buttons.
-    - All buttons are in the order from top left to bottom (see readme picture)
-    - Each button section is collapsible and has an optional name field for naming the main function
+    - All buttons are in the order from top left to bottom (see readme picture).
+    - Each button section is collapsible and has an optional name field for naming the main function.
     - The power button wakes the device from deep sleep (no HA event).
 
   domain: automation
@@ -27,7 +27,7 @@ blueprint:
       input:
         back_name:
           name: "Button name (GPIO2)"
-          description: "Display name for this button · GPIO2"
+          description: 'Display name for this button - GPIO2'
           default: "Back"
           selector:
             text: {}
@@ -55,7 +55,7 @@ blueprint:
       input:
         home_name:
           name: "Button name (GPIO4)"
-          description: "Display name for this button · GPIO4"
+          description: 'Display name for this button - GPIO4'
           default: "Home"
           selector:
             text: {}
@@ -83,7 +83,7 @@ blueprint:
       input:
         play_pause_name:
           name: "Button name (GPIO5)"
-          description: "Display name for this button · GPIO5"
+          description: 'Display name for this button - GPIO5'
           default: "Play Pause"
           selector:
             text: {}
@@ -111,7 +111,7 @@ blueprint:
       input:
         up_name:
           name: "Button name (GPIO18)"
-          description: "Display name for this button · GPIO18"
+          description: 'Display name for this button - GPIO18'
           default: "Up"
           selector:
             text: {}
@@ -139,7 +139,7 @@ blueprint:
       input:
         down_name:
           name: "Button name (GPIO25)"
-          description: "Display name for this button · GPIO25"
+          description: 'Display name for this button - GPIO25'
           default: "Down"
           selector:
             text: {}
@@ -167,7 +167,7 @@ blueprint:
       input:
         left_name:
           name: "Button name (GPIO19)"
-          description: "Display name for this button · GPIO19"
+          description: 'Display name for this button - GPIO19'
           default: "Left"
           selector:
             text: {}
@@ -195,7 +195,7 @@ blueprint:
       input:
         right_name:
           name: "Button name (GPIO23)"
-          description: "Display name for this button · GPIO23"
+          description: 'Display name for this button - GPIO23'
           default: "Right"
           selector:
             text: {}
@@ -223,7 +223,7 @@ blueprint:
       input:
         select_name:
           name: "Button name (GPIO22)"
-          description: "Display name for this button · GPIO22"
+          description: 'Display name for this button - GPIO22'
           default: "Select"
           selector:
             text: {}
@@ -251,7 +251,7 @@ blueprint:
       input:
         volume_up_name:
           name: "Button name (GPIO12)"
-          description: "Display name for this button · GPIO12"
+          description: 'Display name for this button - GPIO12'
           default: "Volume Up"
           selector:
             text: {}
@@ -279,7 +279,7 @@ blueprint:
       input:
         volume_down_name:
           name: "Button name (GPIO15)"
-          description: "Display name for this button · GPIO15"
+          description: 'Display name for this button - GPIO15'
           default: "Volume Down"
           selector:
             text: {}
@@ -307,7 +307,7 @@ blueprint:
       input:
         channel_up_name:
           name: "Button name (GPIO14)"
-          description: "Display name for this button · GPIO14"
+          description: 'Display name for this button - GPIO14'
           default: "Channel Up"
           selector:
             text: {}
@@ -334,7 +334,7 @@ blueprint:
       input:
         channel_down_name:
           name: "Button name (GPIO17)"
-          description: "Display name for this button · GPIO17"
+          description: 'Display name for this button - GPIO17'
           default: "Channel Down"
           selector:
             text: {}
@@ -361,7 +361,7 @@ blueprint:
       input:
         mute_name:
           name: "Button name (GPIO13)"
-          description: "Display name for this button · GPIO13"
+          description: 'Display name for this button - GPIO13'
           default: "Mute"
           selector:
             text: {}
@@ -388,7 +388,7 @@ blueprint:
       input:
         settings_name:
           name: "Button name (GPIO16)"
-          description: "Display name for this button · GPIO16"
+          description: 'Display name for this button - GPIO16'
           default: "Settings"
           selector:
             text: {}
@@ -416,7 +416,7 @@ blueprint:
       input:
         shortcut_1_name:
           name: "Button name (GPIO34)"
-          description: "Display name for this button · GPIO34"
+          description: 'Display name for this button - GPIO34'
           default: "Shortcut 1"
           selector:
             text: {}
@@ -443,7 +443,7 @@ blueprint:
       input:
         shortcut_2_name:
           name: "Button name (GPIO35)"
-          description: "Display name for this button · GPIO35"
+          description: 'Display name for this button - GPIO35'
           default: "Shortcut 2"
           selector:
             text: {}
@@ -470,7 +470,7 @@ blueprint:
       input:
         shortcut_3_name:
           name: "Button name (GPIO32)"
-          description: "Display name for this button · GPIO32"
+          description: 'Display name for this button - GPIO32'
           default: "Shortcut 3"
           selector:
             text: {}
@@ -497,7 +497,7 @@ blueprint:
       input:
         shortcut_4_name:
           name: "Button name (GPIO33)"
-          description: "Display name for this button · GPIO33"
+          description: 'Display name for this button - GPIO33'
           default: "Shortcut 4"
           selector:
             text: {}
@@ -524,7 +524,7 @@ blueprint:
       input:
         brightness_up_name:
           name: "Button name (GPIO27)"
-          description: "Display name for this button · GPIO27"
+          description: 'Display name for this button - GPIO27'
           default: "Brightness Up"
           selector:
             text: {}
@@ -551,7 +551,7 @@ blueprint:
       input:
         brightness_down_name:
           name: "Button name (GPIO26)"
-          description: "Display name for this button · GPIO26"
+          description: 'Display name for this button - GPIO26'
           default: "Brightness Down"
           selector:
             text: {}
