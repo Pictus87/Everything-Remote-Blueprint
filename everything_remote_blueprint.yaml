@@ -1,6 +1,6 @@
 blueprint:
   name: Everything Remote V1.3
-  description: >
+  description:  
     Automation for the Everything Remote (ESP32 ESPHome).
     
     - Supports single, double and long press for all 20 buttons.
