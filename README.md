@@ -12,7 +12,13 @@
     - If you did, then you just need to uncomment the section in the ESPHome FW
 
 ## Setup:  
-Flash the ESPHome code to your remote, create the automation for it and have fun.
+- Flash the ESPHome code to your remote via ESPHome in your HA or the webapp (https://web.esphome.io/)
+- Import the Automation to your HA --> 
+- create the automation and have fun.
+
+<!-- markdownlint-disable MD013 -->
+[![Open your Home Assistant instance and show the blueprint import dialog with a specific blueprint pre-filled.](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fraw.githubusercontent.com%2FPictus87%2FEverything-Remote-Blueprint%2Frefs%2Fheads%2Fmain%2Feverything_remote_blueprint.yaml)
+<!-- markdownlint-enable MD013 -->
 
 ## Button Layout (by [@Stock-Pot](https://github.com/TheStockPot))
 
