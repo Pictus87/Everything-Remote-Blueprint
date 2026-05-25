@@ -1,5 +1,5 @@
 substitutions:
-  device_name: everything-remote
+  device_name: everything-remote #put here the individual name of your device, that you need to write also in the blueprint!
 
 esphome:
   name: everything-remote
@@ -34,7 +34,6 @@ wifi:
   password: "Wifi PW"
   fast_connect: true
   power_save_mode: LIGHT
-
 globals:
   - id: last_active
     type: int
@@ -103,13 +102,6 @@ binary_sensor:
                 button: "back"
                 type: "single"
                 device: "${device_name}"
-          - binary_sensor.template.publish:
-              id: back_single
-              state: ON
-          - delay: 200ms
-          - binary_sensor.template.publish:
-              id: back_single
-              state: OFF
       - timing:
           - ON for 50ms to 350ms
           - OFF for 50ms to 350ms
@@ -123,13 +115,6 @@ binary_sensor:
                 button: "back"
                 type: "double"
                 device: "${device_name}"
-          - binary_sensor.template.publish:
-              id: back_double
-              state: ON
-          - delay: 200ms
-          - binary_sensor.template.publish:
-              id: back_double
-              state: OFF
       - timing:
           - ON for at least 500ms
         then:
@@ -140,23 +125,6 @@ binary_sensor:
                 button: "back"
                 type: "long"
                 device: "${device_name}"
-          - binary_sensor.template.publish:
-              id: back_long
-              state: ON
-          - delay: 200ms
-          - binary_sensor.template.publish:
-              id: back_long
-              state: OFF
-
-  - platform: template
-    name: "Back Single"
-    id: back_single
-  - platform: template
-    name: "Back Double"
-    id: back_double
-  - platform: template
-    name: "Back Long"
-    id: back_long
 
   # ── HOME (GPIO4) ───────────────────────────────────────────
   - platform: gpio
@@ -179,13 +147,6 @@ binary_sensor:
                 button: "home"
                 type: "single"
                 device: "${device_name}"
-          - binary_sensor.template.publish:
-              id: home_single
-              state: ON
-          - delay: 200ms
-          - binary_sensor.template.publish:
-              id: home_single
-              state: OFF
       - timing:
           - ON for 50ms to 350ms
           - OFF for 50ms to 350ms
@@ -199,13 +160,6 @@ binary_sensor:
                 button: "home"
                 type: "double"
                 device: "${device_name}"
-          - binary_sensor.template.publish:
-              id: home_double
-              state: ON
-          - delay: 200ms
-          - binary_sensor.template.publish:
-              id: home_double
-              state: OFF
       - timing:
           - ON for at least 500ms
         then:
@@ -216,23 +170,6 @@ binary_sensor:
                 button: "home"
                 type: "long"
                 device: "${device_name}"
-          - binary_sensor.template.publish:
-              id: home_long
-              state: ON
-          - delay: 200ms
-          - binary_sensor.template.publish:
-              id: home_long
-              state: OFF
-
-  - platform: template
-    name: "Home Single"
-    id: home_single
-  - platform: template
-    name: "Home Double"
-    id: home_double
-  - platform: template
-    name: "Home Long"
-    id: home_long
 
   # ── PLAY PAUSE (GPIO5) ─────────────────────────────────────
   - platform: gpio
@@ -255,13 +192,6 @@ binary_sensor:
                 button: "play_pause"
                 type: "single"
                 device: "${device_name}"
-          - binary_sensor.template.publish:
-              id: play_pause_single
-              state: ON
-          - delay: 200ms
-          - binary_sensor.template.publish:
-              id: play_pause_single
-              state: OFF
       - timing:
           - ON for 50ms to 350ms
           - OFF for 50ms to 350ms
@@ -275,13 +205,6 @@ binary_sensor:
                 button: "play_pause"
                 type: "double"
                 device: "${device_name}"
-          - binary_sensor.template.publish:
-              id: play_pause_double
-              state: ON
-          - delay: 200ms
-          - binary_sensor.template.publish:
-              id: play_pause_double
-              state: OFF
       - timing:
           - ON for at least 500ms
         then:
@@ -292,23 +215,6 @@ binary_sensor:
                 button: "play_pause"
                 type: "long"
                 device: "${device_name}"
-          - binary_sensor.template.publish:
-              id: play_pause_long
-              state: ON
-          - delay: 200ms
-          - binary_sensor.template.publish:
-              id: play_pause_long
-              state: OFF
-
-  - platform: template
-    name: "Play Pause Single"
-    id: play_pause_single
-  - platform: template
-    name: "Play Pause Double"
-    id: play_pause_double
-  - platform: template
-    name: "Play Pause Long"
-    id: play_pause_long
 
   # ── UP (GPIO18) ────────────────────────────────────────────
   - platform: gpio
@@ -331,13 +237,6 @@ binary_sensor:
                 button: "up"
                 type: "single"
                 device: "${device_name}"
-          - binary_sensor.template.publish:
-              id: up_single
-              state: ON
-          - delay: 200ms
-          - binary_sensor.template.publish:
-              id: up_single
-              state: OFF
       - timing:
           - ON for 50ms to 350ms
           - OFF for 50ms to 350ms
@@ -351,13 +250,6 @@ binary_sensor:
                 button: "up"
                 type: "double"
                 device: "${device_name}"
-          - binary_sensor.template.publish:
-              id: up_double
-              state: ON
-          - delay: 200ms
-          - binary_sensor.template.publish:
-              id: up_double
-              state: OFF
       - timing:
           - ON for at least 500ms
         then:
@@ -368,23 +260,6 @@ binary_sensor:
                 button: "up"
                 type: "long"
                 device: "${device_name}"
-          - binary_sensor.template.publish:
-              id: up_long
-              state: ON
-          - delay: 200ms
-          - binary_sensor.template.publish:
-              id: up_long
-              state: OFF
-
-  - platform: template
-    name: "Up Single"
-    id: up_single
-  - platform: template
-    name: "Up Double"
-    id: up_double
-  - platform: template
-    name: "Up Long"
-    id: up_long
 
   # ── LEFT (GPIO19) ──────────────────────────────────────────
   - platform: gpio
@@ -407,13 +282,6 @@ binary_sensor:
                 button: "left"
                 type: "single"
                 device: "${device_name}"
-          - binary_sensor.template.publish:
-              id: left_single
-              state: ON
-          - delay: 200ms
-          - binary_sensor.template.publish:
-              id: left_single
-              state: OFF
       - timing:
           - ON for 50ms to 350ms
           - OFF for 50ms to 350ms
@@ -427,13 +295,6 @@ binary_sensor:
                 button: "left"
                 type: "double"
                 device: "${device_name}"
-          - binary_sensor.template.publish:
-              id: left_double
-              state: ON
-          - delay: 200ms
-          - binary_sensor.template.publish:
-              id: left_double
-              state: OFF
       - timing:
           - ON for at least 500ms
         then:
@@ -444,23 +305,6 @@ binary_sensor:
                 button: "left"
                 type: "long"
                 device: "${device_name}"
-          - binary_sensor.template.publish:
-              id: left_long
-              state: ON
-          - delay: 200ms
-          - binary_sensor.template.publish:
-              id: left_long
-              state: OFF
-
-  - platform: template
-    name: "Left Single"
-    id: left_single
-  - platform: template
-    name: "Left Double"
-    id: left_double
-  - platform: template
-    name: "Left Long"
-    id: left_long
 
   # ── SELECT (GPIO22) ────────────────────────────────────────
   - platform: gpio
@@ -483,13 +327,6 @@ binary_sensor:
                 button: "select"
                 type: "single"
                 device: "${device_name}"
-          - binary_sensor.template.publish:
-              id: select_single
-              state: ON
-          - delay: 200ms
-          - binary_sensor.template.publish:
-              id: select_single
-              state: OFF
       - timing:
           - ON for 50ms to 350ms
           - OFF for 50ms to 350ms
@@ -503,13 +340,6 @@ binary_sensor:
                 button: "select"
                 type: "double"
                 device: "${device_name}"
-          - binary_sensor.template.publish:
-              id: select_double
-              state: ON
-          - delay: 200ms
-          - binary_sensor.template.publish:
-              id: select_double
-              state: OFF
       - timing:
           - ON for at least 500ms
         then:
@@ -520,23 +350,6 @@ binary_sensor:
                 button: "select"
                 type: "long"
                 device: "${device_name}"
-          - binary_sensor.template.publish:
-              id: select_long
-              state: ON
-          - delay: 200ms
-          - binary_sensor.template.publish:
-              id: select_long
-              state: OFF
-
-  - platform: template
-    name: "Select Single"
-    id: select_single
-  - platform: template
-    name: "Select Double"
-    id: select_double
-  - platform: template
-    name: "Select Long"
-    id: select_long
 
   # ── RIGHT (GPIO23) ─────────────────────────────────────────
   - platform: gpio
@@ -559,13 +372,6 @@ binary_sensor:
                 button: "right"
                 type: "single"
                 device: "${device_name}"
-          - binary_sensor.template.publish:
-              id: right_single
-              state: ON
-          - delay: 200ms
-          - binary_sensor.template.publish:
-              id: right_single
-              state: OFF
       - timing:
           - ON for 50ms to 350ms
           - OFF for 50ms to 350ms
@@ -579,13 +385,6 @@ binary_sensor:
                 button: "right"
                 type: "double"
                 device: "${device_name}"
-          - binary_sensor.template.publish:
-              id: right_double
-              state: ON
-          - delay: 200ms
-          - binary_sensor.template.publish:
-              id: right_double
-              state: OFF
       - timing:
           - ON for at least 500ms
         then:
@@ -596,23 +395,6 @@ binary_sensor:
                 button: "right"
                 type: "long"
                 device: "${device_name}"
-          - binary_sensor.template.publish:
-              id: right_long
-              state: ON
-          - delay: 200ms
-          - binary_sensor.template.publish:
-              id: right_long
-              state: OFF
-
-  - platform: template
-    name: "Right Single"
-    id: right_single
-  - platform: template
-    name: "Right Double"
-    id: right_double
-  - platform: template
-    name: "Right Long"
-    id: right_long
 
   # ── DOWN (GPIO25) ──────────────────────────────────────────
   - platform: gpio
@@ -635,13 +417,6 @@ binary_sensor:
                 button: "down"
                 type: "single"
                 device: "${device_name}"
-          - binary_sensor.template.publish:
-              id: down_single
-              state: ON
-          - delay: 200ms
-          - binary_sensor.template.publish:
-              id: down_single
-              state: OFF
       - timing:
           - ON for 50ms to 350ms
           - OFF for 50ms to 350ms
@@ -655,13 +430,6 @@ binary_sensor:
                 button: "down"
                 type: "double"
                 device: "${device_name}"
-          - binary_sensor.template.publish:
-              id: down_double
-              state: ON
-          - delay: 200ms
-          - binary_sensor.template.publish:
-              id: down_double
-              state: OFF
       - timing:
           - ON for at least 500ms
         then:
@@ -672,23 +440,6 @@ binary_sensor:
                 button: "down"
                 type: "long"
                 device: "${device_name}"
-          - binary_sensor.template.publish:
-              id: down_long
-              state: ON
-          - delay: 200ms
-          - binary_sensor.template.publish:
-              id: down_long
-              state: OFF
-
-  - platform: template
-    name: "Down Single"
-    id: down_single
-  - platform: template
-    name: "Down Double"
-    id: down_double
-  - platform: template
-    name: "Down Long"
-    id: down_long
 
   # ── VOLUME UP (GPIO12) ─────────────────────────────────────
   - platform: gpio
@@ -711,13 +462,6 @@ binary_sensor:
                 button: "volume_up"
                 type: "single"
                 device: "${device_name}"
-          - binary_sensor.template.publish:
-              id: volume_up_single
-              state: ON
-          - delay: 200ms
-          - binary_sensor.template.publish:
-              id: volume_up_single
-              state: OFF
       - timing:
           - ON for 50ms to 350ms
           - OFF for 50ms to 350ms
@@ -731,13 +475,6 @@ binary_sensor:
                 button: "volume_up"
                 type: "double"
                 device: "${device_name}"
-          - binary_sensor.template.publish:
-              id: volume_up_double
-              state: ON
-          - delay: 200ms
-          - binary_sensor.template.publish:
-              id: volume_up_double
-              state: OFF
       - timing:
           - ON for at least 500ms
         then:
@@ -748,23 +485,6 @@ binary_sensor:
                 button: "volume_up"
                 type: "long"
                 device: "${device_name}"
-          - binary_sensor.template.publish:
-              id: volume_up_long
-              state: ON
-          - delay: 200ms
-          - binary_sensor.template.publish:
-              id: volume_up_long
-              state: OFF
-
-  - platform: template
-    name: "Volume Up Single"
-    id: volume_up_single
-  - platform: template
-    name: "Volume Up Double"
-    id: volume_up_double
-  - platform: template
-    name: "Volume Up Long"
-    id: volume_up_long
 
   # ── MUTE (GPIO13) ──────────────────────────────────────────
   - platform: gpio
@@ -787,13 +507,6 @@ binary_sensor:
                 button: "mute"
                 type: "single"
                 device: "${device_name}"
-          - binary_sensor.template.publish:
-              id: mute_single
-              state: ON
-          - delay: 200ms
-          - binary_sensor.template.publish:
-              id: mute_single
-              state: OFF
       - timing:
           - ON for 50ms to 350ms
           - OFF for 50ms to 350ms
@@ -807,13 +520,6 @@ binary_sensor:
                 button: "mute"
                 type: "double"
                 device: "${device_name}"
-          - binary_sensor.template.publish:
-              id: mute_double
-              state: ON
-          - delay: 200ms
-          - binary_sensor.template.publish:
-              id: mute_double
-              state: OFF
       - timing:
           - ON for at least 500ms
         then:
@@ -824,23 +530,6 @@ binary_sensor:
                 button: "mute"
                 type: "long"
                 device: "${device_name}"
-          - binary_sensor.template.publish:
-              id: mute_long
-              state: ON
-          - delay: 200ms
-          - binary_sensor.template.publish:
-              id: mute_long
-              state: OFF
-
-  - platform: template
-    name: "Mute Single"
-    id: mute_single
-  - platform: template
-    name: "Mute Double"
-    id: mute_double
-  - platform: template
-    name: "Mute Long"
-    id: mute_long
 
   # ── CHANNEL UP (GPIO14) ────────────────────────────────────
   - platform: gpio
@@ -863,13 +552,6 @@ binary_sensor:
                 button: "channel_up"
                 type: "single"
                 device: "${device_name}"
-          - binary_sensor.template.publish:
-              id: channel_up_single
-              state: ON
-          - delay: 200ms
-          - binary_sensor.template.publish:
-              id: channel_up_single
-              state: OFF
       - timing:
           - ON for 50ms to 350ms
           - OFF for 50ms to 350ms
@@ -883,13 +565,6 @@ binary_sensor:
                 button: "channel_up"
                 type: "double"
                 device: "${device_name}"
-          - binary_sensor.template.publish:
-              id: channel_up_double
-              state: ON
-          - delay: 200ms
-          - binary_sensor.template.publish:
-              id: channel_up_double
-              state: OFF
       - timing:
           - ON for at least 500ms
         then:
@@ -900,23 +575,6 @@ binary_sensor:
                 button: "channel_up"
                 type: "long"
                 device: "${device_name}"
-          - binary_sensor.template.publish:
-              id: channel_up_long
-              state: ON
-          - delay: 200ms
-          - binary_sensor.template.publish:
-              id: channel_up_long
-              state: OFF
-
-  - platform: template
-    name: "Channel Up Single"
-    id: channel_up_single
-  - platform: template
-    name: "Channel Up Double"
-    id: channel_up_double
-  - platform: template
-    name: "Channel Up Long"
-    id: channel_up_long
 
   # ── VOLUME DOWN (GPIO15) ───────────────────────────────────
   - platform: gpio
@@ -939,13 +597,6 @@ binary_sensor:
                 button: "volume_down"
                 type: "single"
                 device: "${device_name}"
-          - binary_sensor.template.publish:
-              id: volume_down_single
-              state: ON
-          - delay: 200ms
-          - binary_sensor.template.publish:
-              id: volume_down_single
-              state: OFF
       - timing:
           - ON for 50ms to 350ms
           - OFF for 50ms to 350ms
@@ -959,13 +610,6 @@ binary_sensor:
                 button: "volume_down"
                 type: "double"
                 device: "${device_name}"
-          - binary_sensor.template.publish:
-              id: volume_down_double
-              state: ON
-          - delay: 200ms
-          - binary_sensor.template.publish:
-              id: volume_down_double
-              state: OFF
       - timing:
           - ON for at least 500ms
         then:
@@ -976,23 +620,6 @@ binary_sensor:
                 button: "volume_down"
                 type: "long"
                 device: "${device_name}"
-          - binary_sensor.template.publish:
-              id: volume_down_long
-              state: ON
-          - delay: 200ms
-          - binary_sensor.template.publish:
-              id: volume_down_long
-              state: OFF
-
-  - platform: template
-    name: "Volume Down Single"
-    id: volume_down_single
-  - platform: template
-    name: "Volume Down Double"
-    id: volume_down_double
-  - platform: template
-    name: "Volume Down Long"
-    id: volume_down_long
 
   # ── SETTINGS (GPIO16) ──────────────────────────────────────
   - platform: gpio
@@ -1015,13 +642,6 @@ binary_sensor:
                 button: "settings"
                 type: "single"
                 device: "${device_name}"
-          - binary_sensor.template.publish:
-              id: settings_single
-              state: ON
-          - delay: 200ms
-          - binary_sensor.template.publish:
-              id: settings_single
-              state: OFF
       - timing:
           - ON for 50ms to 350ms
           - OFF for 50ms to 350ms
@@ -1035,13 +655,6 @@ binary_sensor:
                 button: "settings"
                 type: "double"
                 device: "${device_name}"
-          - binary_sensor.template.publish:
-              id: settings_double
-              state: ON
-          - delay: 200ms
-          - binary_sensor.template.publish:
-              id: settings_double
-              state: OFF
       - timing:
           - ON for at least 500ms
         then:
@@ -1052,23 +665,6 @@ binary_sensor:
                 button: "settings"
                 type: "long"
                 device: "${device_name}"
-          - binary_sensor.template.publish:
-              id: settings_long
-              state: ON
-          - delay: 200ms
-          - binary_sensor.template.publish:
-              id: settings_long
-              state: OFF
-
-  - platform: template
-    name: "Settings Single"
-    id: settings_single
-  - platform: template
-    name: "Settings Double"
-    id: settings_double
-  - platform: template
-    name: "Settings Long"
-    id: settings_long
 
   # ── CHANNEL DOWN (GPIO17) ──────────────────────────────────
   - platform: gpio
@@ -1091,13 +687,6 @@ binary_sensor:
                 button: "channel_down"
                 type: "single"
                 device: "${device_name}"
-          - binary_sensor.template.publish:
-              id: channel_down_single
-              state: ON
-          - delay: 200ms
-          - binary_sensor.template.publish:
-              id: channel_down_single
-              state: OFF
       - timing:
           - ON for 50ms to 350ms
           - OFF for 50ms to 350ms
@@ -1111,13 +700,6 @@ binary_sensor:
                 button: "channel_down"
                 type: "double"
                 device: "${device_name}"
-          - binary_sensor.template.publish:
-              id: channel_down_double
-              state: ON
-          - delay: 200ms
-          - binary_sensor.template.publish:
-              id: channel_down_double
-              state: OFF
       - timing:
           - ON for at least 500ms
         then:
@@ -1128,23 +710,6 @@ binary_sensor:
                 button: "channel_down"
                 type: "long"
                 device: "${device_name}"
-          - binary_sensor.template.publish:
-              id: channel_down_long
-              state: ON
-          - delay: 200ms
-          - binary_sensor.template.publish:
-              id: channel_down_long
-              state: OFF
-
-  - platform: template
-    name: "Channel Down Single"
-    id: channel_down_single
-  - platform: template
-    name: "Channel Down Double"
-    id: channel_down_double
-  - platform: template
-    name: "Channel Down Long"
-    id: channel_down_long
 
   # ── SHORTCUT 1 (GPIO34 – kein Pullup möglich!) ─────────────
   - platform: gpio
@@ -1167,13 +732,6 @@ binary_sensor:
                 button: "shortcut_1"
                 type: "single"
                 device: "${device_name}"
-          - binary_sensor.template.publish:
-              id: shortcut_1_single
-              state: ON
-          - delay: 200ms
-          - binary_sensor.template.publish:
-              id: shortcut_1_single
-              state: OFF
       - timing:
           - ON for 50ms to 350ms
           - OFF for 50ms to 350ms
@@ -1187,13 +745,6 @@ binary_sensor:
                 button: "shortcut_1"
                 type: "double"
                 device: "${device_name}"
-          - binary_sensor.template.publish:
-              id: shortcut_1_double
-              state: ON
-          - delay: 200ms
-          - binary_sensor.template.publish:
-              id: shortcut_1_double
-              state: OFF
       - timing:
           - ON for at least 500ms
         then:
@@ -1204,23 +755,6 @@ binary_sensor:
                 button: "shortcut_1"
                 type: "long"
                 device: "${device_name}"
-          - binary_sensor.template.publish:
-              id: shortcut_1_long
-              state: ON
-          - delay: 200ms
-          - binary_sensor.template.publish:
-              id: shortcut_1_long
-              state: OFF
-
-  - platform: template
-    name: "Shortcut 1 Single"
-    id: shortcut_1_single
-  - platform: template
-    name: "Shortcut 1 Double"
-    id: shortcut_1_double
-  - platform: template
-    name: "Shortcut 1 Long"
-    id: shortcut_1_long
 
   # ── SHORTCUT 2 (GPIO35 – kein Pullup möglich!) ─────────────
   - platform: gpio
@@ -1243,13 +777,6 @@ binary_sensor:
                 button: "shortcut_2"
                 type: "single"
                 device: "${device_name}"
-          - binary_sensor.template.publish:
-              id: shortcut_2_single
-              state: ON
-          - delay: 200ms
-          - binary_sensor.template.publish:
-              id: shortcut_2_single
-              state: OFF
       - timing:
           - ON for 50ms to 350ms
           - OFF for 50ms to 350ms
@@ -1263,13 +790,6 @@ binary_sensor:
                 button: "shortcut_2"
                 type: "double"
                 device: "${device_name}"
-          - binary_sensor.template.publish:
-              id: shortcut_2_double
-              state: ON
-          - delay: 200ms
-          - binary_sensor.template.publish:
-              id: shortcut_2_double
-              state: OFF
       - timing:
           - ON for at least 500ms
         then:
@@ -1280,23 +800,6 @@ binary_sensor:
                 button: "shortcut_2"
                 type: "long"
                 device: "${device_name}"
-          - binary_sensor.template.publish:
-              id: shortcut_2_long
-              state: ON
-          - delay: 200ms
-          - binary_sensor.template.publish:
-              id: shortcut_2_long
-              state: OFF
-
-  - platform: template
-    name: "Shortcut 2 Single"
-    id: shortcut_2_single
-  - platform: template
-    name: "Shortcut 2 Double"
-    id: shortcut_2_double
-  - platform: template
-    name: "Shortcut 2 Long"
-    id: shortcut_2_long
 
   # ── SHORTCUT 3 (GPIO32) ────────────────────────────────────
   - platform: gpio
@@ -1319,13 +822,6 @@ binary_sensor:
                 button: "shortcut_3"
                 type: "single"
                 device: "${device_name}"
-          - binary_sensor.template.publish:
-              id: shortcut_3_single
-              state: ON
-          - delay: 200ms
-          - binary_sensor.template.publish:
-              id: shortcut_3_single
-              state: OFF
       - timing:
           - ON for 50ms to 350ms
           - OFF for 50ms to 350ms
@@ -1339,13 +835,6 @@ binary_sensor:
                 button: "shortcut_3"
                 type: "double"
                 device: "${device_name}"
-          - binary_sensor.template.publish:
-              id: shortcut_3_double
-              state: ON
-          - delay: 200ms
-          - binary_sensor.template.publish:
-              id: shortcut_3_double
-              state: OFF
       - timing:
           - ON for at least 500ms
         then:
@@ -1356,23 +845,6 @@ binary_sensor:
                 button: "shortcut_3"
                 type: "long"
                 device: "${device_name}"
-          - binary_sensor.template.publish:
-              id: shortcut_3_long
-              state: ON
-          - delay: 200ms
-          - binary_sensor.template.publish:
-              id: shortcut_3_long
-              state: OFF
-
-  - platform: template
-    name: "Shortcut 3 Single"
-    id: shortcut_3_single
-  - platform: template
-    name: "Shortcut 3 Double"
-    id: shortcut_3_double
-  - platform: template
-    name: "Shortcut 3 Long"
-    id: shortcut_3_long
 
   # ── SHORTCUT 4 (GPIO33) ────────────────────────────────────
   - platform: gpio
@@ -1395,13 +867,6 @@ binary_sensor:
                 button: "shortcut_4"
                 type: "single"
                 device: "${device_name}"
-          - binary_sensor.template.publish:
-              id: shortcut_4_single
-              state: ON
-          - delay: 200ms
-          - binary_sensor.template.publish:
-              id: shortcut_4_single
-              state: OFF
       - timing:
           - ON for 50ms to 350ms
           - OFF for 50ms to 350ms
@@ -1415,13 +880,6 @@ binary_sensor:
                 button: "shortcut_4"
                 type: "double"
                 device: "${device_name}"
-          - binary_sensor.template.publish:
-              id: shortcut_4_double
-              state: ON
-          - delay: 200ms
-          - binary_sensor.template.publish:
-              id: shortcut_4_double
-              state: OFF
       - timing:
           - ON for at least 500ms
         then:
@@ -1432,23 +890,6 @@ binary_sensor:
                 button: "shortcut_4"
                 type: "long"
                 device: "${device_name}"
-          - binary_sensor.template.publish:
-              id: shortcut_4_long
-              state: ON
-          - delay: 200ms
-          - binary_sensor.template.publish:
-              id: shortcut_4_long
-              state: OFF
-
-  - platform: template
-    name: "Shortcut 4 Single"
-    id: shortcut_4_single
-  - platform: template
-    name: "Shortcut 4 Double"
-    id: shortcut_4_double
-  - platform: template
-    name: "Shortcut 4 Long"
-    id: shortcut_4_long
 
   # ── BRIGHTNESS DOWN (GPIO26) ───────────────────────────────
   - platform: gpio
@@ -1471,13 +912,6 @@ binary_sensor:
                 button: "brightness_down"
                 type: "single"
                 device: "${device_name}"
-          - binary_sensor.template.publish:
-              id: brightness_down_single
-              state: ON
-          - delay: 200ms
-          - binary_sensor.template.publish:
-              id: brightness_down_single
-              state: OFF
       - timing:
           - ON for 50ms to 350ms
           - OFF for 50ms to 350ms
@@ -1491,13 +925,6 @@ binary_sensor:
                 button: "brightness_down"
                 type: "double"
                 device: "${device_name}"
-          - binary_sensor.template.publish:
-              id: brightness_down_double
-              state: ON
-          - delay: 200ms
-          - binary_sensor.template.publish:
-              id: brightness_down_double
-              state: OFF
       - timing:
           - ON for at least 500ms
         then:
@@ -1508,23 +935,6 @@ binary_sensor:
                 button: "brightness_down"
                 type: "long"
                 device: "${device_name}"
-          - binary_sensor.template.publish:
-              id: brightness_down_long
-              state: ON
-          - delay: 200ms
-          - binary_sensor.template.publish:
-              id: brightness_down_long
-              state: OFF
-
-  - platform: template
-    name: "Brightness Down Single"
-    id: brightness_down_single
-  - platform: template
-    name: "Brightness Down Double"
-    id: brightness_down_double
-  - platform: template
-    name: "Brightness Down Long"
-    id: brightness_down_long
 
   # ── BRIGHTNESS UP (GPIO27) ─────────────────────────────────
   - platform: gpio
@@ -1547,13 +957,6 @@ binary_sensor:
                 button: "brightness_up"
                 type: "single"
                 device: "${device_name}"
-          - binary_sensor.template.publish:
-              id: brightness_up_single
-              state: ON
-          - delay: 200ms
-          - binary_sensor.template.publish:
-              id: brightness_up_single
-              state: OFF
       - timing:
           - ON for 50ms to 350ms
           - OFF for 50ms to 350ms
@@ -1567,13 +970,6 @@ binary_sensor:
                 button: "brightness_up"
                 type: "double"
                 device: "${device_name}"
-          - binary_sensor.template.publish:
-              id: brightness_up_double
-              state: ON
-          - delay: 200ms
-          - binary_sensor.template.publish:
-              id: brightness_up_double
-              state: OFF
       - timing:
           - ON for at least 500ms
         then:
@@ -1584,52 +980,34 @@ binary_sensor:
                 button: "brightness_up"
                 type: "long"
                 device: "${device_name}"
-          - binary_sensor.template.publish:
-              id: brightness_up_long
-              state: ON
-          - delay: 200ms
-          - binary_sensor.template.publish:
-              id: brightness_up_long
-              state: OFF
-
-  - platform: template
-    name: "Brightness Up Single"
-    id: brightness_up_single
-  - platform: template
-    name: "Brightness Up Double"
-    id: brightness_up_double
-  - platform: template
-    name: "Brightness Up Long"
-    id: brightness_up_long
 
 # ==============================================================
 # BATTERIE
 # ==============================================================
 sensor:
   - platform: adc
-    pin: GPIO36        # VP – externer Spannungsteiler 2× 100kΩ
+    pin: GPIO36
     name: "Battery Voltage"
     id: battery_voltage
     attenuation: 11db
     update_interval: 60s
     filters:
-      - multiply: 1.941  # kalibriert: gemessen 3.3V, angezeigt 3.4V
+      - multiply: 1.941
       - median:
           window_size: 5
           send_every: 5
           send_first_at: 1
-
+ 
   - platform: template
     name: "Battery Percent"
-    id: battery_percent
     unit_of_measurement: "%"
     device_class: battery
     state_class: measurement
     update_interval: 60s
     lambda: |-
       float v = id(battery_voltage).state;
-      // LiPo 1200mAh: 4.2V = 100%, 3.0V = 0%
       float pct = (v - 3.0) / (4.2 - 3.0) * 100.0;
       if (pct > 100.0) pct = 100.0;
       if (pct < 0.0)   pct = 0.0;
       return pct;
+      
