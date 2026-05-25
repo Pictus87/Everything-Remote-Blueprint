@@ -1,6 +1,7 @@
 THis is the blueprint for the "Everything-Remot" made by [@Stock-Pot](https://github.com/TheStockPot) with improved ESP-Home Firmware.
 
 Functions:
+
 The Blueprint offers collapsable section for each button and all button have single, double and long-press actions.
 
 Since everybody want to customize their remote (i guess), i have added a "device name" of the remote into the ESP-Home firmware
