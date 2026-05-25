@@ -2,7 +2,7 @@ substitutions:
   device_name: everything-remote #put here the individual name of your device, that you need to write also in the blueprint!
 
 esphome:
-  name: everything-remote
+  name: everything-remote 
   friendly_name: Everything-Remote
   on_boot:
     - priority: 250
@@ -984,30 +984,30 @@ binary_sensor:
 # ==============================================================
 # BATTERIE
 # ==============================================================
-sensor:
-  - platform: adc
-    pin: GPIO36
-    name: "Battery Voltage"
-    id: battery_voltage
-    attenuation: 11db
-    update_interval: 60s
-    filters:
-      - multiply: 1.941
-      - median:
-          window_size: 5
-          send_every: 5
-          send_first_at: 1
- 
-  - platform: template
-    name: "Battery Percent"
-    unit_of_measurement: "%"
-    device_class: battery
-    state_class: measurement
-    update_interval: 60s
-    lambda: |-
-      float v = id(battery_voltage).state;
-      float pct = (v - 3.0) / (4.2 - 3.0) * 100.0;
-      if (pct > 100.0) pct = 100.0;
-      if (pct < 0.0)   pct = 0.0;
-      return pct;
+#sensor:
+#  - platform: adc
+#    pin: GPIO36
+#    name: "Battery Voltage"
+#    id: battery_voltage
+#    attenuation: 11db
+#    update_interval: 60s
+#    filters:
+#      - multiply: 1.941
+#      - median:
+#          window_size: 5
+#          send_every: 5
+#          send_first_at: 1
+# 
+#  - platform: template
+#    name: "Battery Percent"
+#    unit_of_measurement: "%"
+#    device_class: battery
+#    state_class: measurement
+#    update_interval: 60s
+#    lambda: |-
+#      float v = id(battery_voltage).state;
+#      float pct = (v - 3.0) / (4.2 - 3.0) * 100.0;
+#      if (pct > 100.0) pct = 100.0;
+#      if (pct < 0.0)   pct = 0.0;
+#      return pct;
       
